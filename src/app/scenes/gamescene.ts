@@ -22,6 +22,7 @@ export class Gamescene extends Phaser.Scene {
 
   create() {
     this.background.create()
+    this.player.create()
   }
 
   

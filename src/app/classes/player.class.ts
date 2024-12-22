@@ -12,6 +12,9 @@ export class Player extends MovableObjects {
     }
 
     create() {
+
+        this.scene.add.image(720, 1080 / 2, 'sharkie1')
+
     }
 
 }
