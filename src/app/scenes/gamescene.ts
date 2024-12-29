@@ -25,5 +25,8 @@ export class Gamescene extends Phaser.Scene {
     this.player.create()
   }
 
+  override update() {
+    this.player.update()
+  }
   
 }

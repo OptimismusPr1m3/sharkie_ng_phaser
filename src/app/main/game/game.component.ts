@@ -40,7 +40,10 @@ export class GameComponent {
       },
       },
       physics: {
-        default: 'arcade'
+        default: 'arcade',
+        arcade: {
+          debug: true,
+        },
       },
       parent: this.phaserFrameElement.nativeElement,
       scene: [Gamescene]
