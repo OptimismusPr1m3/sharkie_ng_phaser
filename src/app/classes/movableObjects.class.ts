@@ -47,6 +47,10 @@ export class MovableObjects {
     sprite.anims.play(animation, true);
   }
 
+  attackAnimation( sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
+    sprite.anims.play(animation, true);
+  }
+
   idle(sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
     sprite.setVelocityX(0);
     sprite.setVelocityY(0);

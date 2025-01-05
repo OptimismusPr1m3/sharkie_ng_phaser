@@ -1,13 +1,15 @@
 import Phaser from 'phaser';
 import { MovableObjects } from './movableObjects.class';
+import { KeyboardInputs } from './keyboardInputs.class';
 
 export class Player extends MovableObjects {
-    cursorKeys!: Phaser.Types.Input.Keyboard.CursorKeys;
     playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     keyObject!: Phaser.Input.Keyboard.Key;
+    keyboardInput!: KeyboardInputs;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
+    this.keyboardInput = new KeyboardInputs(scene);
     this.width = 500;
     this.height = 400;
     this.offsetX = 160;
@@ -40,6 +42,7 @@ export class Player extends MovableObjects {
     //DEATH ANIMATIONS
     this.loadImages(12, 'poisoned_death_anim', 'assets/sharkie/dead/poisoned/');
     this.loadImages(10, 'shock_death_anim', 'assets/sharkie/dead/shock/');
+    this.keyboardInput.initializeInputs();
   }
 
   create() {
@@ -51,22 +54,28 @@ export class Player extends MovableObjects {
     this.playerSprite.body.setSize(this.width, this.height);
     this.playerSprite.body.setOffset(this.offsetX, this.offsetY);
     this.loadAnimations();
-
-    if (this.scene.input.keyboard) {
-      this.cursorKeys = this.scene.input.keyboard.createCursorKeys();
-      this.keyObject = this.scene.input.keyboard.addKey('W');
-    }
   }
 
   update() {
-    if (this.cursorKeys.left?.isDown) {
+    this.manageInputs();
+  }
+
+  manageInputs() {
+    const keys = this.keyboardInput.getCursorKeys();
+    if (keys.left?.isDown && !keys.left?.isUp) {
       this.moveX(this.playerSprite, -360, 'swim', true);
-    } else if (this.cursorKeys.right?.isDown) {
+    } else if (keys.right?.isDown && !keys.right?.isUp) {
       this.moveX(this.playerSprite, 360, 'swim', false);
-    } else if (this.cursorKeys.up?.isDown) {
+    } else if (keys.up?.isDown && !keys.up?.isUp) {
       this.moveY(this.playerSprite, -360, 'swim');
-    } else if (this.cursorKeys.down?.isDown) {
+    } else if (keys.down?.isDown && !keys.down?.isUp) {
       this.moveY(this.playerSprite, 360, 'swim');
+    } else if (keys.space?.isDown && !keys.space?.isUp) {
+      this.attackAnimation(this.playerSprite, 'green_bubble_trap');
+    } else if (keys.w_bubble?.isDown && !keys.w_bubble?.isUp) { //G key
+      this.attackAnimation(this.playerSprite, 'no_bubble_trap');
+    } else if (keys.slap?.isDown && !keys.slap?.isUp) { // F key
+      this.attackAnimation(this.playerSprite, 'fin_slap');
     } else {
       this.idle(this.playerSprite, 'idle');
     }
@@ -143,5 +152,7 @@ export class Player extends MovableObjects {
       repeat: -1,
     });
   }
+
+
   
 }
