@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
 import { MovableObjects } from './movableObjects.class';
 import { KeyboardInputs } from './keyboardInputs.class';
+import { CustomKeys } from '../interfaces/CustomKeys.interface';
 
 export class Player extends MovableObjects {
     playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     keyObject!: Phaser.Input.Keyboard.Key;
     keyboardInput!: KeyboardInputs;
+    
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -60,26 +62,49 @@ export class Player extends MovableObjects {
     this.manageInputs();
   }
 
+  
   manageInputs() {
     const keys = this.keyboardInput.getCursorKeys();
-    if (keys.left?.isDown && !keys.left?.isUp) {
-      this.moveX(this.playerSprite, -360, 'swim', true);
-    } else if (keys.right?.isDown && !keys.right?.isUp) {
-      this.moveX(this.playerSprite, 360, 'swim', false);
-    } else if (keys.up?.isDown && !keys.up?.isUp) {
-      this.moveY(this.playerSprite, -360, 'swim');
-    } else if (keys.down?.isDown && !keys.down?.isUp) {
-      this.moveY(this.playerSprite, 360, 'swim');
-    } else if (keys.space?.isDown && !keys.space?.isUp) {
-      this.attackAnimation(this.playerSprite, 'green_bubble_trap');
-    } else if (keys.w_bubble?.isDown && !keys.w_bubble?.isUp) { //G key
-      this.attackAnimation(this.playerSprite, 'no_bubble_trap');
-    } else if (keys.slap?.isDown && !keys.slap?.isUp) { // F key
-      this.attackAnimation(this.playerSprite, 'fin_slap');
+    if (this.isAttacking) return;
+
+    if (keys.down.isDown || keys.up.isDown || keys.left.isDown || keys.right.isDown) {
+      this.manageMovement(keys); 
+    } else if (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) {
+      this.manageAttacks(keys);
     } else {
       this.idle(this.playerSprite, 'idle');
     }
   }
+
+  manageMovement(keys: CustomKeys) {
+    if (this.isAttacking) return;
+
+    if (keys.left?.isDown) {
+      this.moveX(this.playerSprite, -360, 'swim', true);
+    } else if (keys.right?.isDown) {
+      this.moveX(this.playerSprite, 360, 'swim', false);
+    } else if (keys.up?.isDown) {
+      this.moveY(this.playerSprite, -360, 'swim');
+    } else if (keys.down?.isDown) {
+      this.moveY(this.playerSprite, 360, 'swim');
+    }
+  }
+
+  manageAttacks(keys: CustomKeys) {
+    if (this.isAttacking) return;
+
+    if (keys.space?.isDown && !this.attackKeyPressed) {
+      this.attackKeyPressed = true;
+      this.attackAnimation(this.playerSprite, 'green_bubble_trap', 'idle');
+    } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
+      this.attackKeyPressed = true;
+      this.attackAnimation(this.playerSprite, 'no_bubble_trap', 'idle');
+    } else if (keys.slap?.isDown && !this.attackKeyPressed) {
+      this.attackKeyPressed = true;
+      this.attackAnimation(this.playerSprite, 'fin_slap', 'idle');
+    }
+  }
+
 
   loadAnimations() {
     // IDLE ANIMATIONS
@@ -109,19 +134,19 @@ export class Player extends MovableObjects {
       key: 'green_bubble_trap',
       frames: this.getSpriteImages('green_bubble_trap_anim', 8),
       frameRate: 9,
-      repeat: -1,
+      repeat: 0,
     });
     this.scene.anims.create({
       key: 'no_bubble_trap',
       frames: this.getSpriteImages('no_bubble_trap_anim', 8),
       frameRate: 9,
-      repeat: -1,
+      repeat: 0,
     });
     this.scene.anims.create({
       key: 'fin_slap',
       frames: this.getSpriteImages('fin_slap_anim', 8),
       frameRate: 9,
-      repeat: -1,
+      repeat: 0,
     });
 
     // HURT ANIMATIONS
@@ -152,7 +177,6 @@ export class Player extends MovableObjects {
       repeat: -1,
     });
   }
-
 
   
 }

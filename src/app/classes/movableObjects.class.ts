@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 
 export class MovableObjects {
   scene: Phaser.Scene;
-
+  isAttacking: boolean = false;
+  attackKeyPressed: boolean = false;
   healthPoints: number = 100;
   height!: number;
   width!: number;
@@ -34,6 +35,7 @@ export class MovableObjects {
     direction: boolean
   ) {
     sprite.setVelocityX(speed);
+    sprite.setVelocityY(0);
     sprite.flipX = direction; //true = left, false = right
     sprite.anims.play(animation, true);
   }
@@ -41,20 +43,35 @@ export class MovableObjects {
   moveY(
     sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     speed: number,
-    animation: string,
+    animation: string
   ) {
     sprite.setVelocityY(speed);
+    sprite.setVelocityX(0);
     sprite.anims.play(animation, true);
   }
 
-  attackAnimation( sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
-    sprite.anims.play(animation, true);
+  attackAnimation(
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string,
+    idleAnimation: string
+  ) {
+    if (this.isAttacking) return;
+    sprite.setVelocity(0);
+    this.isAttacking = true;
+    sprite.anims.play(animation).once('animationcomplete', () => {
+      this.idle(sprite, idleAnimation);
+      this.isAttacking = false;
+      console.log('attack complete');
+      this.attackKeyPressed = false;
+    });
   }
 
-  idle(sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
+  idle(
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string
+  ) {
     sprite.setVelocityX(0);
     sprite.setVelocityY(0);
     sprite.anims.play(animation, true);
   }
-
 }
