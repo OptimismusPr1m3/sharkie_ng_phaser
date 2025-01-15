@@ -2,12 +2,14 @@ import Phaser from 'phaser';
 import { MovableObjects } from './movableObjects.class';
 import { KeyboardInputs } from './keyboardInputs.class';
 import { CustomKeys } from '../interfaces/CustomKeys.interface';
+import { Throwable } from './throwable.class';
 
 export class Player extends MovableObjects {
-    playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-    keyObject!: Phaser.Input.Keyboard.Key;
-    keyboardInput!: KeyboardInputs;
-    
+  playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  keyObject!: Phaser.Input.Keyboard.Key;
+  keyboardInput!: KeyboardInputs;
+  throwable_pois!: Throwable;
+  throwable_white!: Throwable;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -16,6 +18,8 @@ export class Player extends MovableObjects {
     this.height = 400;
     this.offsetX = 160;
     this.offsetY = 400;
+    this.throwable_pois = new Throwable(scene, 'poisoned_bubble', 'assets/sharkie/attack/bubble_trap/poisoned_bubble.png');
+    this.throwable_white = new Throwable(scene,'white_bubble', 'assets/sharkie/attack/bubble_trap/white_bubble.png');
   }
 
   preload() {
@@ -45,6 +49,8 @@ export class Player extends MovableObjects {
     this.loadImages(12, 'poisoned_death_anim', 'assets/sharkie/dead/poisoned/');
     this.loadImages(10, 'shock_death_anim', 'assets/sharkie/dead/shock/');
     this.keyboardInput.initializeInputs();
+    this.throwable_pois.preload();
+    this.throwable_white.preload();
   }
 
   create() {
@@ -62,13 +68,17 @@ export class Player extends MovableObjects {
     this.manageInputs();
   }
 
-  
   manageInputs() {
     const keys = this.keyboardInput.getCursorKeys();
     if (this.isAttacking) return;
 
-    if (keys.down.isDown || keys.up.isDown || keys.left.isDown || keys.right.isDown) {
-      this.manageMovement(keys); 
+    if (
+      keys.down.isDown ||
+      keys.up.isDown ||
+      keys.left.isDown ||
+      keys.right.isDown
+    ) {
+      this.manageMovement(keys);
     } else if (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) {
       this.manageAttacks(keys);
     } else {
@@ -95,7 +105,7 @@ export class Player extends MovableObjects {
 
     if (keys.space?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
-      this.attackAnimation(this.playerSprite, 'green_bubble_trap', 'idle');
+      this.bubbleAttack(this.playerSprite, 'green_bubble_trap', true);
     } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
       this.attackAnimation(this.playerSprite, 'no_bubble_trap', 'idle');
@@ -105,6 +115,25 @@ export class Player extends MovableObjects {
     }
   }
 
+  bubbleAttack(
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string,
+    isPooisoned: boolean
+  ) {
+    if (this.isAttacking) return;
+    sprite.setVelocity(0);
+    this.isAttacking = true;
+    sprite.anims.play(animation).once('animationcomplete', () => {
+      this.idle(sprite, 'idle');
+      this.isAttacking = false;
+      if (isPooisoned) {
+        this.throwable_pois.spawnThrowable(sprite.x + 100, sprite.y + 40, sprite.flipX ? -300 : 300);
+      } else {
+        this.throwable_white.spawnThrowable(sprite.x + 100, sprite.y + 40, sprite.flipX ? -300 : 300);
+      }
+      this.attackKeyPressed = false;
+    });
+  }
 
   loadAnimations() {
     // IDLE ANIMATIONS
@@ -177,6 +206,4 @@ export class Player extends MovableObjects {
       repeat: -1,
     });
   }
-
-  
 }
