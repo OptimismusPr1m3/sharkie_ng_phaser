@@ -61,11 +61,15 @@ export class Player extends MovableObjects {
     this.playerSprite.setCollideWorldBounds(true);
     this.playerSprite.body.setSize(this.width, this.height);
     this.playerSprite.body.setOffset(this.offsetX, this.offsetY);
+    //this.playerSprite.body.onCollide = true;
     this.loadAnimations();
   }
 
   update() {
     this.manageInputs();
+    if (this.playerSprite.body.onCollide) {
+      console.log('collided');
+    }
   }
 
   manageInputs() {
