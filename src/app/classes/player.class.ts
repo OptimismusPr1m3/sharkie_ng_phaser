@@ -3,6 +3,7 @@ import { MovableObjects } from './movableObjects.class';
 import { KeyboardInputs } from './keyboardInputs.class';
 import { CustomKeys } from '../interfaces/CustomKeys.interface';
 import { Throwable } from './throwable.class';
+import { GlobalstateserviceService } from '../services/globalstate.service';
 
 export class Player extends MovableObjects {
   playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -11,15 +12,28 @@ export class Player extends MovableObjects {
   throwable_pois!: Throwable;
   throwable_white!: Throwable;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(
+    scene: Phaser.Scene,
+    public globalStateService: GlobalstateserviceService
+  ) {
     super(scene);
     this.keyboardInput = new KeyboardInputs(scene);
     this.width = 500;
     this.height = 400;
     this.offsetX = 160;
     this.offsetY = 400;
-    this.throwable_pois = new Throwable(scene, 'poisoned_bubble', 'assets/sharkie/attack/bubble_trap/poisoned_bubble.png');
-    this.throwable_white = new Throwable(scene,'white_bubble', 'assets/sharkie/attack/bubble_trap/white_bubble.png');
+    this.throwable_pois = new Throwable(
+      scene,
+      'poisoned_bubble',
+      'assets/sharkie/attack/bubble_trap/poisoned_bubble.png',
+      globalStateService
+    );
+    this.throwable_white = new Throwable(
+      scene,
+      'white_bubble',
+      'assets/sharkie/attack/bubble_trap/white_bubble.png',
+      globalStateService
+    );
   }
 
   preload() {
@@ -61,15 +75,11 @@ export class Player extends MovableObjects {
     this.playerSprite.setCollideWorldBounds(true);
     this.playerSprite.body.setSize(this.width, this.height);
     this.playerSprite.body.setOffset(this.offsetX, this.offsetY);
-    //this.playerSprite.body.onCollide = true;
     this.loadAnimations();
   }
 
   update() {
     this.manageInputs();
-    if (this.playerSprite.body.onCollide) {
-      console.log('collided');
-    }
   }
 
   manageInputs() {
@@ -131,12 +141,24 @@ export class Player extends MovableObjects {
       this.idle(sprite, 'idle');
       this.isAttacking = false;
       if (isPooisoned) {
-        this.throwable_pois.spawnThrowable(sprite.x + 100, sprite.y + 40, sprite.flipX ? -300 : 300);
+        this.throwable_pois.spawnThrowable(
+          sprite.x + 100,
+          sprite.y + 40,
+          sprite.flipX ? -300 : 300
+        );
       } else {
-        this.throwable_white.spawnThrowable(sprite.x + 100, sprite.y + 40, sprite.flipX ? -300 : 300);
+        this.throwable_white.spawnThrowable(
+          sprite.x + 100,
+          sprite.y + 40,
+          sprite.flipX ? -300 : 300
+        );
       }
       this.attackKeyPressed = false;
     });
+  }
+
+  getBubbles() {
+    return this.globalStateService.getBubbles();
   }
 
   loadAnimations() {

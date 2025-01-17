@@ -4,7 +4,7 @@ export class Jellyfish extends MovableObjects {
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   posX!: number;
   posY: number = 1080 / Math.random() * 2;
-
+  isDead: boolean = false;
   constructor(
     scene: Phaser.Scene,
   ) {
@@ -35,7 +35,9 @@ export class Jellyfish extends MovableObjects {
   } 
 
   manageEnemy() {
-    this.idle(this.enemySprite, 'aggro_swim');
+    if (!this.isDead) {
+      this.idle(this.enemySprite, 'aggro_swim');
+    }
   }
  
   loadAnimations() {  
@@ -45,9 +47,11 @@ export class Jellyfish extends MovableObjects {
       frameRate: 5,
       repeat: -1,
     });
-
-
   }
+
+  // dead() {
+  //   this.enemySprite.destroy();
+  // }
 
 
 }

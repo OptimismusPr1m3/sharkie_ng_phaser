@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import Phaser from 'phaser';
 import { Gamescene } from '../../scenes/gamescene';
+import { GlobalstateserviceService } from '../../services/globalstate.service';
 
 @Component({
   selector: 'app-game',
@@ -22,6 +23,9 @@ export class GameComponent {
       this.isOverFHD = false
     }
   }
+
+  constructor(private globalStateService: GlobalstateserviceService) {}
+
 
   ngOnInit() {
     if (window.innerWidth < 1920) {
@@ -46,7 +50,7 @@ export class GameComponent {
         },
       },
       parent: this.phaserFrameElement.nativeElement,
-      scene: [Gamescene]
+      scene: [new Gamescene(this.globalStateService)]
     }
 
     this.game = new Phaser.Game(config)
