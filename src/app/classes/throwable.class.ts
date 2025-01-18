@@ -15,28 +15,58 @@ export class Throwable extends MovableObjects {
     super(scene);
     this.bubbleName = bubbleName;
     this.bubbleColorPath = colorPath;
-    console.log('GlobalstateserviceService:', globalStateService); // Debug-Log
   }
 
   preload() {
     this.scene.load.image(this.bubbleName, this.bubbleColorPath);
   }
 
-  spawnThrowable(xPosition: number, yPosition: number, speedX: number = 300) {
+  spawnThrowable(
+    xPosition: number,
+    yPosition: number,
+    speedX: number = 300,
+    color: string
+  ) {
     const bubble = this.scene.physics.add.sprite(
       xPosition,
       yPosition,
       this.bubbleName
     );
-    this.globalStateService.addBubble(bubble);
+    if (color === 'green') {
+      this.throwGreenBubble(bubble, speedX);
+    } else if (color === 'white') {
+      this.throwWhiteBubble(bubble, speedX);
+    }
+  }
+
+  throwGreenBubble(
+    bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    speedX: number
+  ) {
+    this.globalStateService.addPBubble(bubble);
     bubble.setVelocityX(speedX);
     bubble.setCollideWorldBounds(true);
     bubble.body.onWorldBounds = true;
     bubble.setScale(0.3);
     this.scene.time.delayedCall(3000, () => {
       bubble.destroy();
-      this.globalStateService.removeBubble(bubble);
-      console.log('Bubble destroyed', this.globalStateService.getBubbles());
+      this.globalStateService.removePBubble(bubble);
+      console.log('Bubble destroyed', this.globalStateService.getPBubbles());
     });
   }
+  throwWhiteBubble(
+    bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    speedX: number
+  ) {
+    this.globalStateService.addWBubble(bubble);
+    bubble.setVelocityX(speedX);
+    bubble.setCollideWorldBounds(true);
+    bubble.body.onWorldBounds = true;
+    bubble.setScale(0.3);
+    this.scene.time.delayedCall(3000, () => {
+      bubble.destroy();
+      this.globalStateService.removeWBubble(bubble);
+      console.log('Bubble destroyed', this.globalStateService.getWBubbles());
+    });
+  } 
 }

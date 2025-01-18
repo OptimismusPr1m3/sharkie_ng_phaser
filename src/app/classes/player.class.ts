@@ -44,16 +44,11 @@ export class Player extends MovableObjects {
     this.loadImages(6, 'swim_anim', 'assets/sharkie/swim/');
     // ATTACK ANIMATIONS
     // Bubble Trap
-    this.loadImages(
-      8,
-      'green_bubble_trap_anim',
-      'assets/sharkie/attack/bubble_trap/green/'
+    this.loadImages(8, 'green_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/green/'
     );
-    this.loadImages(
-      8,
-      'no_bubble_trap_anim',
-      'assets/sharkie/attack/bubble_trap/no_bubble/'
+    this.loadImages(8,'no_bubble_trap_anim','assets/sharkie/attack/bubble_trap/no_bubble/'
     );
+    this.loadImages(8, 'white_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/white/');
     // Fin Slap
     this.loadImages(8, 'fin_slap_anim', 'assets/sharkie/attack/fin_slap/');
     //HURT ANIMATIONS
@@ -122,7 +117,7 @@ export class Player extends MovableObjects {
       this.bubbleAttack(this.playerSprite, 'green_bubble_trap', true);
     } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
-      this.attackAnimation(this.playerSprite, 'no_bubble_trap', 'idle');
+      this.bubbleAttack(this.playerSprite, 'white_bubble_trap', false);
     } else if (keys.slap?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
       this.attackAnimation(this.playerSprite, 'fin_slap', 'idle');
@@ -142,23 +137,28 @@ export class Player extends MovableObjects {
       this.isAttacking = false;
       if (isPooisoned) {
         this.throwable_pois.spawnThrowable(
-          sprite.x + 100,
+          sprite.flipX ? sprite.x - 100 : sprite.x + 100, // position form bubble to left or right depending on player direction
           sprite.y + 40,
-          sprite.flipX ? -300 : 300
+          sprite.flipX ? -300 : 300, //speed to left or right depending on player direction
+          'green'
         );
       } else {
         this.throwable_white.spawnThrowable(
-          sprite.x + 100,
+          sprite.flipX ? sprite.x - 100 : sprite.x + 100, // position form bubble to left or right depending on player direction
           sprite.y + 40,
-          sprite.flipX ? -300 : 300
+          sprite.flipX ? -300 : 300, //speed to left or right depending on player direction
+          'white'
         );
       }
       this.attackKeyPressed = false;
     });
   }
 
-  getBubbles() {
-    return this.globalStateService.getBubbles();
+  getPBubbles() {
+    return this.globalStateService.getPBubbles();
+  }
+  getWBubbles() {
+    return this.globalStateService.getWBubbles();
   }
 
   loadAnimations() {
@@ -194,6 +194,12 @@ export class Player extends MovableObjects {
     this.scene.anims.create({
       key: 'no_bubble_trap',
       frames: this.getSpriteImages('no_bubble_trap_anim', 8),
+      frameRate: 9,
+      repeat: 0,
+    });
+    this.scene.anims.create({
+      key: 'white_bubble_trap',
+      frames: this.getSpriteImages('white_bubble_trap_anim', 8),
       frameRate: 9,
       repeat: 0,
     });

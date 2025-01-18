@@ -13,7 +13,6 @@ export class Gamescene extends Phaser.Scene {
   constructor(public globalStateService: GlobalstateserviceService) {
     super({ key: 'Gamescene' });
     this.background = new Background(this);
-    //this.enemy_0 = new Jellyfish(this)
     this.player = new Player(this, globalStateService);
     this.enemies = [
       new Jellyfish(this),
@@ -24,8 +23,8 @@ export class Gamescene extends Phaser.Scene {
 
   preload() {
     this.background.preload();
-    //this.enemy_0.preload();
-    this.loadEnemies();
+    //this.loadEnemies();
+    this.enemies[0].preload();
     this.player.preload();
   }
 
@@ -67,17 +66,36 @@ export class Gamescene extends Phaser.Scene {
         console.log('collision');
       }
     });
-    const bubbles = this.player.getBubbles();
+    //this.poisonedBubbleCollisionCheck();
+    this.whiteBubbleCollisionCheck();
+  }
+
+  poisonedBubbleCollisionCheck() {
+    const bubbles = this.player.getPBubbles();
     bubbles.forEach((bubble) => {
       this.enemies.forEach((enemy: Jellyfish) => {
         if (this.physics.overlap(bubble, enemy.enemySprite)) {
-          this.globalStateService.removeBubble(bubble); // Entferne Bubble über Signal
+          this.globalStateService.removePBubble(bubble); 
           bubble.destroy();
           enemy.isDead = true;
           enemy.enemySprite.destroy();
-          // enemy.dead();
         }
       });
     });
   }
+
+  whiteBubbleCollisionCheck() {
+    const bubbles = this.player.getWBubbles();
+    bubbles.forEach((bubble) => {
+      this.enemies.forEach((enemy: Jellyfish) => {
+        if (this.physics.overlap(bubble, enemy.enemySprite)) {
+          this.globalStateService.removeWBubble(bubble);
+          bubble.destroy();
+          enemy.isDead = true;
+          enemy.enemySprite.destroy();
+        }
+      });
+    });
+  }
+
 }

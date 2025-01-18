@@ -5,22 +5,37 @@ import { Injectable, signal } from '@angular/core';
 })
 export class GlobalstateserviceService {
 
-  activeBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
+  activePBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
+  activeWBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
 
   constructor() { }
 
-  getBubbles() {
-    return this.activeBubbles();
+  getPBubbles() {
+    return this.activePBubbles();
   }
 
-  addBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-    const bubbles = this.activeBubbles();
-    this.activeBubbles.set([...bubbles, bubble]);
+  addPBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const bubbles = this.activePBubbles();
+    this.activePBubbles.set([...bubbles, bubble]);
   }
 
-  removeBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-    const bubbles = this.activeBubbles();
-    this.activeBubbles.set(bubbles.filter((b) => b !== bubble));
+  removePBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const bubbles = this.activePBubbles();
+    this.activePBubbles.set(bubbles.filter((b) => b !== bubble));
+  }
+
+  getWBubbles() {
+    return this.activeWBubbles();
+  }
+
+  addWBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const bubbles = this.activeWBubbles();
+    this.activeWBubbles.set([...bubbles, bubble]);
+  }
+
+  removeWBubble(bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const bubbles = this.activeWBubbles();
+    this.activeWBubbles.set(bubbles.filter((b) => b !== bubble));
   }
 
 }

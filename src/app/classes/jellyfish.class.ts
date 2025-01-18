@@ -3,7 +3,7 @@ import { MovableObjects } from './movableObjects.class';
 export class Jellyfish extends MovableObjects {
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   posX!: number;
-  posY: number = 1080 / Math.random() * 2;
+  posY: number = 720 / (Math.random() * 2);
   isDead: boolean = false;
   constructor(
     scene: Phaser.Scene,
@@ -13,6 +13,7 @@ export class Jellyfish extends MovableObjects {
     this.height = 180;
     this.offsetX = 20;
     this.offsetY = 40;
+    console.log(this.posY);
   }
 
   preload() {
@@ -44,14 +45,9 @@ export class Jellyfish extends MovableObjects {
     this.scene.anims.create({
       key: 'aggro_swim',
       frames: this.getSpriteImages('aggro_swim', 4),
-      frameRate: 5,
+      frameRate: Math.random() * 5,
       repeat: -1,
     });
   }
-
-  // dead() {
-  //   this.enemySprite.destroy();
-  // }
-
 
 }
