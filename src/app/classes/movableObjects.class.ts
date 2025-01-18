@@ -9,6 +9,9 @@ export class MovableObjects {
   width!: number;
   offsetX!: number;
   offsetY!: number;
+  posX!: number;
+  posY!: number;
+  isDead: boolean = false;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;

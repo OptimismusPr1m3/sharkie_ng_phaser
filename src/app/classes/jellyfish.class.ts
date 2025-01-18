@@ -2,9 +2,6 @@ import { MovableObjects } from './movableObjects.class';
 
 export class Jellyfish extends MovableObjects {
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  posX!: number;
-  posY: number = 720 / (Math.random() * 2);
-  isDead: boolean = false;
   constructor(
     scene: Phaser.Scene,
   ) {
@@ -13,6 +10,7 @@ export class Jellyfish extends MovableObjects {
     this.height = 180;
     this.offsetX = 20;
     this.offsetY = 40;
+    this.posY = 720 / (Math.random() * 2);
     console.log(this.posY);
   }
 

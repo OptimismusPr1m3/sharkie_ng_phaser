@@ -3,6 +3,7 @@ import { Background } from '../classes/background.class';
 import { Player } from '../classes/player.class';
 import { Jellyfish } from '../classes/jellyfish.class';
 import { GlobalstateserviceService } from '../services/globalstate.service';
+import { Pufferfish } from '../classes/pufferfish.class';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
@@ -18,6 +19,7 @@ export class Gamescene extends Phaser.Scene {
       new Jellyfish(this),
       new Jellyfish(this),
       new Jellyfish(this),
+      new Pufferfish(this),
     ];
   }
 
@@ -25,6 +27,7 @@ export class Gamescene extends Phaser.Scene {
     this.background.preload();
     //this.loadEnemies();
     this.enemies[0].preload();
+    this.enemies[3].preload();
     this.player.preload();
   }
 
