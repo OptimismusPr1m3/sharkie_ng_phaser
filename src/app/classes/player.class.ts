@@ -16,12 +16,13 @@ export class Player extends MovableObjects {
     scene: Phaser.Scene,
     public globalStateService: GlobalstateserviceService
   ) {
-    super(scene);
+    super(scene, globalStateService);
     this.keyboardInput = new KeyboardInputs(scene);
     this.width = 500;
     this.height = 400;
     this.offsetX = 160;
     this.offsetY = 400;
+    this.speed = 360;
     this.throwable_pois = new Throwable(
       scene,
       'poisoned_bubble',
@@ -99,13 +100,13 @@ export class Player extends MovableObjects {
     if (this.isAttacking) return;
 
     if (keys.left?.isDown) {
-      this.moveX(this.playerSprite, -360, 'swim', true);
+      this.moveX(this.playerSprite, -this.speed, 'swim', true);
     } else if (keys.right?.isDown) {
-      this.moveX(this.playerSprite, 360, 'swim', false);
+      this.moveX(this.playerSprite, this.speed, 'swim', false);
     } else if (keys.up?.isDown) {
-      this.moveY(this.playerSprite, -360, 'swim');
+      this.moveY(this.playerSprite, -this.speed, 'swim');
     } else if (keys.down?.isDown) {
-      this.moveY(this.playerSprite, 360, 'swim');
+      this.moveY(this.playerSprite, this.speed, 'swim');
     }
   }
 

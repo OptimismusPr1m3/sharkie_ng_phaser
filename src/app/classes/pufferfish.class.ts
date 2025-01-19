@@ -1,23 +1,28 @@
+import { GlobalstateserviceService } from "../services/globalstate.service";
 import { MovableObjects } from "./movableObjects.class";
 
 export class Pufferfish extends MovableObjects {
 
     enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-
-    constructor(scene: Phaser.Scene) {
-        super(scene);
+    isAggro: boolean = false;
+    hasAggro: boolean = false;
+    constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
+        super(scene, globalStates);
         this.width = 200;
         this.height = 150;
         this.offsetX = 10;
         this.offsetY = 0;
         this.posY = 720 / (Math.random() * 2);
         this.posX = 800;
+        this.speed = -10;
         console.log(this.posY);
     }
 
     preload() {
         this.loadImages(5, 'pufferfish_swim', 'assets/enemies/pufferfish/swim/green/');
         this.loadImages(3, 'pufferfish_death', 'assets/enemies/pufferfish/die/green/');
+        this.loadImages(5, 'pufferfish_aggro_trans', 'assets/enemies/pufferfish/aggro_transition/green/');
+        this.loadImages(5, 'pufferfish_aggro_swim', 'assets/enemies/pufferfish/aggro_swim/green/');
     }
     
     create() {
@@ -33,11 +38,35 @@ export class Pufferfish extends MovableObjects {
 
     update() {
         this.manageEnemy();
+        //this.checkAggroState();
     }
 
     manageEnemy() {
-        if (!this.isDead) {
-            this.idle(this.enemySprite, 'pufferfish_swim_anim');
+        if (!this.isDead && !this.isAggro) {
+            this.moveX(this.enemySprite, this.speed, 'pufferfish_swim_anim', false);
+        } else if (!this.isDead && this.isAggro && this.hasAggro) {
+            this.moveX(this.enemySprite, this.speed, 'pufferfish_aggro_anim', false);
+        }
+    }
+
+    checkAggroState() {
+        if (!this.hasAggro) {
+            console.log('pufferfish is checking aggro state');
+            this.enemySprite.anims.play('pufferfish_aggro_trans_anim').once('animationcomplete', () => {	
+               this.speed = -150;
+               this.hasAggro = true;
+                console.log('aggro transition complete');
+            });
+    }}
+
+    checkDeathState() {
+        if (this.isDead) {
+            this.enemySprite.anims.play('pufferfish_death_anim').once('animationcomplete', () => {
+                console.log('pufferfish is dead');
+                this.hasDied = true;
+                this.globalStates.hasSlapped.set(false);
+            });
+
         }
     }
 
@@ -53,8 +82,22 @@ export class Pufferfish extends MovableObjects {
             key: 'pufferfish_death_anim',
             frames: this.getSpriteImages('pufferfish_death', 3),
             frameRate: 6,
-            repeat: -1,
+            repeat: 0,
         });
+
+        this.scene.anims.create({
+            key: 'pufferfish_aggro_trans_anim',
+            frames: this.getSpriteImages('pufferfish_aggro_trans', 5),
+            frameRate: 6,
+            repeat: 0, // weil soll aj nur einmal abgespielt werden 
+        })
+
+        this.scene.anims.create({
+            key: 'pufferfish_aggro_anim',
+            frames: this.getSpriteImages('pufferfish_aggro_swim', 5),
+            frameRate: 6,
+            repeat: -1,
+        })
     }
 
 

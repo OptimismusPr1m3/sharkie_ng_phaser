@@ -7,6 +7,8 @@ export class GlobalstateserviceService {
 
   activePBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
   activeWBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
+  hasSlapped = signal<boolean>(false);
+  
 
   constructor() { }
 

@@ -12,7 +12,7 @@ export class Throwable extends MovableObjects {
     colorPath: string,
     public globalStateService: GlobalstateserviceService
   ) {
-    super(scene);
+    super(scene, globalStateService);
     this.bubbleName = bubbleName;
     this.bubbleColorPath = colorPath;
   }

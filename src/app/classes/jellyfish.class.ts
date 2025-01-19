@@ -1,11 +1,12 @@
+import { GlobalstateserviceService } from '../services/globalstate.service';
 import { MovableObjects } from './movableObjects.class';
 
 export class Jellyfish extends MovableObjects {
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   constructor(
-    scene: Phaser.Scene,
+    scene: Phaser.Scene, globalStates: GlobalstateserviceService
   ) {
-    super(scene);
+    super(scene, globalStates);
     this.width = 180;
     this.height = 180;
     this.offsetX = 20;

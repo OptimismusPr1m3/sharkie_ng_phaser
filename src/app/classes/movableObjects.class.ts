@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { GlobalstateserviceService } from '../services/globalstate.service';
 
 export class MovableObjects {
   scene: Phaser.Scene;
@@ -11,10 +12,14 @@ export class MovableObjects {
   offsetY!: number;
   posX!: number;
   posY!: number;
+  speed!: number;
   isDead: boolean = false;
+  hasDied: boolean = false;
+  globalStates: GlobalstateserviceService;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     this.scene = scene;
+    this.globalStates = globalStates;
   }
 
   loadImages(amount: number, key: string, path: string) {
@@ -62,7 +67,7 @@ export class MovableObjects {
     sprite.setVelocity(0);
     this.isAttacking = true;
     sprite.anims.play(animation).once('animationcomplete', () => {
-      this.idle(sprite, idleAnimation);
+      this.globalStates.hasSlapped.set(true);
       this.isAttacking = false;
       console.log('attack complete');
       this.attackKeyPressed = false;
