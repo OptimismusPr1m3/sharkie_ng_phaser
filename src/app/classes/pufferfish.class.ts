@@ -71,33 +71,43 @@ export class Pufferfish extends MovableObjects {
     }
 
     loadAnimations() {
-        this.scene.anims.create({
-            key: 'pufferfish_swim_anim',
-            frames: this.getSpriteImages('pufferfish_swim', 5),
-            frameRate: 6,
-            repeat: -1,
-        });
+        if (!this.scene.anims.exists(('pufferfish_swim_anim'))) {
+            this.scene.anims.create({
+                key: 'pufferfish_swim_anim',
+                frames: this.getSpriteImages('pufferfish_swim', 5),
+                frameRate: 6,
+                repeat: -1,
+            });
+        }
+        if (!this.scene.anims.exists(('pufferfish_death_anim'))) {
+            this.scene.anims.create({
+                key: 'pufferfish_death_anim',
+                frames: this.getSpriteImages('pufferfish_death', 3),
+                frameRate: 6,
+                repeat: 0,
+            }); 
+        }
+        if (!this.scene.anims.exists(('pufferfish_aggro_trans_anim'))) {
+            this.scene.anims.create({
+                key: 'pufferfish_aggro_trans_anim',
+                frames: this.getSpriteImages('pufferfish_aggro_trans', 5),
+                frameRate: 6,
+                repeat: 0, // weil soll aj nur einmal abgespielt werden 
+            })
+        }
+        if (!this.scene.anims.exists(('pufferfish_aggro_anim'))) {
+            this.scene.anims.create({
+                key: 'pufferfish_aggro_anim',
+                frames: this.getSpriteImages('pufferfish_aggro_swim', 5),
+                frameRate: 6,
+                repeat: -1,
+            })
+        }
+        
 
-        this.scene.anims.create({
-            key: 'pufferfish_death_anim',
-            frames: this.getSpriteImages('pufferfish_death', 3),
-            frameRate: 6,
-            repeat: 0,
-        });
+        
 
-        this.scene.anims.create({
-            key: 'pufferfish_aggro_trans_anim',
-            frames: this.getSpriteImages('pufferfish_aggro_trans', 5),
-            frameRate: 6,
-            repeat: 0, // weil soll aj nur einmal abgespielt werden 
-        })
-
-        this.scene.anims.create({
-            key: 'pufferfish_aggro_anim',
-            frames: this.getSpriteImages('pufferfish_aggro_swim', 5),
-            frameRate: 6,
-            repeat: -1,
-        })
+        
     }
 
 

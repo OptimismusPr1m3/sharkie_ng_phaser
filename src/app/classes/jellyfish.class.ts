@@ -36,17 +36,20 @@ export class Jellyfish extends MovableObjects {
 
   manageEnemy() {
     if (!this.isDead) {
-      this.idle(this.enemySprite, 'aggro_swim');
+      this.idle(this.enemySprite, 'aggro_swim_anim');
     }
   }
  
   loadAnimations() {  
-    this.scene.anims.create({
-      key: 'aggro_swim',
-      frames: this.getSpriteImages('aggro_swim', 4),
-      frameRate: Math.random() * 5,
-      repeat: -1,
-    });
+    if (!this.scene.anims.exists('aggro_swim_anim')) {
+      this.scene.anims.create({
+        key: 'aggro_swim_anim',
+        frames: this.getSpriteImages('aggro_swim', 4),
+        frameRate: Math.random() * 5,
+        repeat: -1,
+      });
+    }
+    
   }
 
 }
