@@ -23,9 +23,9 @@ export class Gamescene extends Phaser.Scene {
       new Jellyfish(this, globalStateService),
       new Jellyfish(this, globalStateService),
       new Jellyfish(this, globalStateService),
-      new Pufferfish(this, globalStateService),
-      new Pufferfish(this, globalStateService),
-      new Pufferfish(this, globalStateService),
+      new Pufferfish(this, globalStateService, 800),
+      new Pufferfish(this, globalStateService, 1200),
+      new Pufferfish(this, globalStateService, 1800),
     ];
     this.objects = [
       new Potions(this),
@@ -57,23 +57,14 @@ export class Gamescene extends Phaser.Scene {
 
   preload() {
     this.background.preload();
-
-    // this.enemies[0].preload();
-    // this.enemies[3].preload();
-    // this.objects[0].preload()
-
     this.enemies.forEach((enemy) => enemy.preload());
     this.objects.forEach((obj) => obj.preload());
-
     this.player.preload();
   }
 
   create() {
     this.physics.world.setBounds(0, 0, 1920 * 2, 1080);
     this.background.create();
-
-    // this.createObjects(this.enemies);
-    // this.createObjects(this.objects);
 
     this.setupPhysicsGroups();
 
@@ -101,13 +92,6 @@ export class Gamescene extends Phaser.Scene {
     );
   }
 
-  // throwCollision(
-  //   player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-  //   enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
-  // ) {
-  //   console.log('Kollision !!!!!', player);
-  // }
-
   handlePlayerEnemyCollision(
     player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
@@ -123,13 +107,13 @@ export class Gamescene extends Phaser.Scene {
   }
 
   setupPhysicsGroups() {
-    this.enemiesGroup = this.physics.add.group();
+    this.enemiesGroup = this.physics.add.group({collideWorldBounds: true});
     this.enemies.forEach((enemy) => {
       enemy.create();
       this.enemiesGroup.add(enemy.enemySprite);
     });
 
-    this.potionsGroup = this.physics.add.group();
+    this.potionsGroup = this.physics.add.group({collideWorldBounds: true});
     this.objects.forEach((obj) => {
       obj.create();
       this.potionsGroup.add(obj.objectSprite);
@@ -140,15 +124,12 @@ export class Gamescene extends Phaser.Scene {
     this.player.update();
     this.updateObjects(this.enemies);
     this.updateObjects(this.objects);
-    ///this.checkCollisions(this.enemies);
-    //this.garbageCollection();
+    this.checkCollisions(this.enemies);
+    this.garbageCollection();
   }
 
   checkCollisions(objects: any) {
     objects.forEach((obj: any) => {
-      if (this.physics.overlap(this.player.playerSprite, obj.enemySprite)) {
-        console.log('collision');
-      }
       if (obj instanceof Pufferfish) {
         this.checkPufferfishProximity(obj);
         this.checkSlapCollision(obj);
@@ -175,14 +156,14 @@ export class Gamescene extends Phaser.Scene {
 
   checkSlapCollision(enemy: Pufferfish) {
     if (enemy.isDead) return;
-
+    console.log(this.globalStateService.hasSlapped())
     const distance = Phaser.Math.Distance.Between(
       this.player.playerSprite.x,
       this.player.playerSprite.y,
       enemy.enemySprite.x,
       enemy.enemySprite.y
     );
-    if (distance < 320 && this.globalStateService.hasSlapped()) {
+    if (distance < 300 && this.globalStateService.hasSlapped()) {
       enemy.isDead = true;
       enemy.enemySprite.setVelocityX(0);
       enemy.checkDeathState();

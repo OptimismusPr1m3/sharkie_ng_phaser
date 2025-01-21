@@ -6,16 +6,15 @@ export class Pufferfish extends MovableObjects {
     enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     isAggro: boolean = false;
     hasAggro: boolean = false;
-    constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
+    constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService, posX: number) {
         super(scene, globalStates);
         this.width = 200;
         this.height = 150;
         this.offsetX = 10;
         this.offsetY = 0;
         this.posY = 720 / (Math.random() * 2);
-        this.posX = 800;
+        this.posX = posX;
         this.speed = -10;
-        console.log(this.posY);
     }
 
     preload() {
@@ -38,7 +37,6 @@ export class Pufferfish extends MovableObjects {
 
     update() {
         this.manageEnemy();
-        //this.checkAggroState();
     }
 
     manageEnemy() {
