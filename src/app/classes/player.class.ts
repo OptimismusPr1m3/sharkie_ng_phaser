@@ -137,6 +137,7 @@ export class Player extends MovableObjects {
       this.idle(sprite, 'idle');
       this.isAttacking = false;
       if (isPooisoned) {
+        this.globalStateService.modifyProgressbar('potions', -1);
         this.throwable_pois.spawnThrowable(
           sprite.flipX ? sprite.x - 100 : sprite.x + 100, // position form bubble to left or right depending on player direction
           sprite.y + 40,

@@ -17,6 +17,7 @@ export class Jellyfish extends MovableObjects {
 
   preload() {
     this.loadImages(4, 'aggro_swim', 'assets/enemies/jellyfish/regular_damage/Lila');
+    this.loadImages(4, 'dead_animation', 'assets/enemies/jellyfish/dead/lila/');
   }
 
   create() {
@@ -39,6 +40,16 @@ export class Jellyfish extends MovableObjects {
       this.idle(this.enemySprite, 'aggro_swim_anim');
     }
   }
+
+  checkDeathState() {
+    if (this.isDead) {
+        this.enemySprite.anims.play('dead_anim').once('animationcomplete', () => {
+            console.log('jellyfish is dead');
+            this.hasDied = true;
+        });
+
+    }
+}
  
   loadAnimations() {  
     if (!this.scene.anims.exists('aggro_swim_anim')) {
@@ -50,6 +61,15 @@ export class Jellyfish extends MovableObjects {
       });
     }
     
+    if (!this.scene.anims.exists('dead_anim')) {
+      this.scene.anims.create({
+        key: 'dead_anim',
+        frames: this.getSpriteImages('dead_animation', 4),
+        frameRate: 4,
+        repeat: 0,
+      });
+    }
+
   }
 
 }

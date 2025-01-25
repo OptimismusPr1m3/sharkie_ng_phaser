@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { StaticObjects } from './staticObjects.class';
+import { GlobalstateserviceService } from '../services/globalstate.service';
 
 export class Background extends StaticObjects {
   
-  constructor(scene: Phaser.Scene) {
-    super(scene);
+  constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
+    super(scene, globalStates);
   }
 
   preload() {

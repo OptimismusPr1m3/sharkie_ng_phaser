@@ -1,8 +1,12 @@
+import { GlobalstateserviceService } from '../services/globalstate.service';
 import { StaticObjects } from './staticObjects.class';
 
 export class Potions extends StaticObjects {
-  constructor(scene: Phaser.Scene) {
-    super(scene);
+
+  hasPickedUp: boolean = false;
+
+  constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
+    super(scene, globalStates);
     this.posX = this.randomizeX();
     this.posY = 100;
   }
@@ -23,7 +27,10 @@ export class Potions extends StaticObjects {
   }
 
   update() {
-    this.idle(this.objectSprite, 'potions_anim')
+    if (!this.hasPickedUp) {
+      this.idle(this.objectSprite, 'potions_anim')
+    }
+    
   }
 
   randomizeX(): number {

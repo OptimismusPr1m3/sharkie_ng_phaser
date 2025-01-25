@@ -6,6 +6,7 @@ import { GlobalstateserviceService } from '../services/globalstate.service';
 import { Pufferfish } from '../classes/pufferfish.class';
 import { StaticObjects } from '../classes/staticObjects.class';
 import { Potions } from '../classes/potions.class';
+import { Progressbar } from '../classes/progressbar.class';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
@@ -14,11 +15,17 @@ export class Gamescene extends Phaser.Scene {
   private objects: Potions[] = [];
   private enemiesGroup!: Phaser.Physics.Arcade.Group;
   private potionsGroup!: Phaser.Physics.Arcade.Group;
+  private progressBars: Progressbar[] = [];
 
   constructor(public globalStateService: GlobalstateserviceService) {
     super({ key: 'Gamescene' });
-    this.background = new Background(this);
+    this.background = new Background(this, globalStateService);
     this.player = new Player(this, globalStateService);
+    this.progressBars = [
+      new Progressbar(this, 'health', globalStateService, 50),
+      new Progressbar(this, 'coin', globalStateService, 190),
+      new Progressbar(this, 'potions', globalStateService, 120),
+    ];
     this.enemies = [
       new Jellyfish(this, globalStateService),
       new Jellyfish(this, globalStateService),
@@ -28,12 +35,12 @@ export class Gamescene extends Phaser.Scene {
       new Pufferfish(this, globalStateService, 1800),
     ];
     this.objects = [
-      new Potions(this),
-      new Potions(this),
-      new Potions(this),
-      new Potions(this),
-      new Potions(this),
-      new Potions(this),
+      new Potions(this, this.globalStateService),
+      new Potions(this, this.globalStateService),
+      new Potions(this, this.globalStateService),
+      new Potions(this, this.globalStateService),
+      new Potions(this, this.globalStateService),
+      new Potions(this, this.globalStateService),
     ];
   }
 
@@ -59,13 +66,14 @@ export class Gamescene extends Phaser.Scene {
     this.background.preload();
     this.enemies.forEach((enemy) => enemy.preload());
     this.objects.forEach((obj) => obj.preload());
+    this.progressBars.forEach((bar) => bar.preload());
     this.player.preload();
   }
 
   create() {
     this.physics.world.setBounds(0, 0, 1920 * 2, 1080);
     this.background.create();
-
+    this.createObjects(this.progressBars)
     this.setupPhysicsGroups();
 
     this.player.create();
@@ -90,6 +98,13 @@ export class Gamescene extends Phaser.Scene {
       undefined,
       this
     );
+    this.physics.add.overlap(
+      this.player.playerSprite,
+      this.potionsGroup,
+      this.handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this
+    )
   }
 
   handlePlayerEnemyCollision(
@@ -104,6 +119,31 @@ export class Gamescene extends Phaser.Scene {
     } else if (hitEnemy instanceof Jellyfish) {
       console.log('Kollision mit einem Jellyfish!');
     }
+    console.log(this.enemies)
+  }
+
+  handlePlayerPotionCollision(
+    player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    potion: Phaser.Types.Physics.Arcade.GameObjectWithBody
+  ) {
+    const hitPotion = this.objects.find((p) => p.objectSprite === potion)
+    if (hitPotion) {
+      const index = this.findIndexFromArray(this.objects, hitPotion);
+      console.log('Kollision mitPotion!');
+      hitPotion.hasPickedUp = true;
+      hitPotion.objectSprite.destroy();
+      this.deleteIndexFromArray(this.objects, index);
+      this.globalStateService.modifyProgressbar('potions', 1);
+    }
+    console.log(this.objects)
+  }
+
+  deleteIndexFromArray(array: any[], index: number) {
+    array.splice(index, 1);
+  }
+
+  findIndexFromArray(array: any[], element: any) {
+    return array.findIndex((el) => el === element);
   }
 
   setupPhysicsGroups() {
@@ -124,6 +164,7 @@ export class Gamescene extends Phaser.Scene {
     this.player.update();
     this.updateObjects(this.enemies);
     this.updateObjects(this.objects);
+    this.updateObjects(this.progressBars);
     this.checkCollisions(this.enemies);
     this.garbageCollection();
   }
@@ -156,7 +197,6 @@ export class Gamescene extends Phaser.Scene {
 
   checkSlapCollision(enemy: Pufferfish) {
     if (enemy.isDead) return;
-    console.log(this.globalStateService.hasSlapped())
     const distance = Phaser.Math.Distance.Between(
       this.player.playerSprite.x,
       this.player.playerSprite.y,
@@ -173,9 +213,11 @@ export class Gamescene extends Phaser.Scene {
   }
 
   garbageCollection() {
-    this.enemies.forEach((enemy) => {
+    this.enemies.forEach((enemy, index) => {
       if (enemy.hasDied) {
+        console.log('Hier der Index', index);
         enemy.enemySprite.destroy();
+        this.deleteIndexFromArray(this.enemies, index);
       }
     });
   }
@@ -205,7 +247,7 @@ export class Gamescene extends Phaser.Scene {
           this.globalStateService.removeWBubble(bubble);
           bubble.destroy();
           enemy.isDead = true;
-          enemy.enemySprite.destroy();
+          enemy.checkDeathState();
         }
       });
     });

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { GlobalstateserviceService } from '../services/globalstate.service';
 
 export class StaticObjects {
   scene: Phaser.Scene;
@@ -6,8 +7,11 @@ export class StaticObjects {
   posX!: number
   posY!: number
   objectSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
-  constructor(scene: Phaser.Scene) {
+  globalStates: GlobalstateserviceService;
+
+  constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     this.scene = scene;
+    this.globalStates = globalStates;
   }
 
   loadImages(amount: number, key: string, path: string) {
