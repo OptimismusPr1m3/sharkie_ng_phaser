@@ -30,9 +30,10 @@ export class Gamescene extends Phaser.Scene {
       new Jellyfish(this, globalStateService),
       new Jellyfish(this, globalStateService),
       new Jellyfish(this, globalStateService),
-      new Pufferfish(this, globalStateService, 800),
-      new Pufferfish(this, globalStateService, 1200),
-      new Pufferfish(this, globalStateService, 1800),
+      new Pufferfish(this, globalStateService),
+      new Pufferfish(this, globalStateService),
+      new Pufferfish(this, globalStateService),
+      new Pufferfish(this, globalStateService),
     ];
     this.objects = [
       new Potions(this, this.globalStateService),
@@ -113,13 +114,13 @@ export class Gamescene extends Phaser.Scene {
   ) {
     const hitEnemy = this.enemies.find((e) => e.enemySprite === enemy)
     if (hitEnemy instanceof Pufferfish) {
-      console.log('Kollision mit einem Pufferfish!');
+      //console.log('Kollision mit einem Pufferfish!');
       this.checkPufferfishProximity(hitEnemy);
       this.checkSlapCollision(hitEnemy);
     } else if (hitEnemy instanceof Jellyfish) {
-      console.log('Kollision mit einem Jellyfish!');
+      //console.log('Kollision mit einem Jellyfish!');
     }
-    console.log(this.enemies)
+    //console.log(this.enemies)
   }
 
   handlePlayerPotionCollision(
@@ -161,11 +162,11 @@ export class Gamescene extends Phaser.Scene {
   }
 
   override update() {
+    this.checkCollisions(this.enemies);
     this.player.update();
     this.updateObjects(this.enemies);
     this.updateObjects(this.objects);
     this.updateObjects(this.progressBars);
-    this.checkCollisions(this.enemies);
     this.garbageCollection();
   }
 
@@ -189,7 +190,7 @@ export class Gamescene extends Phaser.Scene {
       enemy.enemySprite.x,
       enemy.enemySprite.y
     );
-    if (distance < 400) {
+    if (distance < 500) {
       enemy.isAggro = true;
       enemy.checkAggroState();
     }
@@ -204,6 +205,7 @@ export class Gamescene extends Phaser.Scene {
       enemy.enemySprite.y
     );
     if (distance < 300 && this.globalStateService.hasSlapped()) {
+      console.log('Slap collision with Pufferfish');
       enemy.isDead = true;
       enemy.enemySprite.setVelocityX(0);
       enemy.checkDeathState();
@@ -215,7 +217,7 @@ export class Gamescene extends Phaser.Scene {
   garbageCollection() {
     this.enemies.forEach((enemy, index) => {
       if (enemy.hasDied) {
-        console.log('Hier der Index', index);
+        //console.log('Hier der Index', index);
         enemy.enemySprite.destroy();
         this.deleteIndexFromArray(this.enemies, index);
       }

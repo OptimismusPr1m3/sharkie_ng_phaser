@@ -82,4 +82,9 @@ export class MovableObjects {
     sprite.setVelocityY(0);
     sprite.anims.play(animation, true);
   }
+
+  randomizeX(min: number, max:number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 }

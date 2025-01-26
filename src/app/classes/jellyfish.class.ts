@@ -12,7 +12,7 @@ export class Jellyfish extends MovableObjects {
     this.offsetX = 20;
     this.offsetY = 40;
     this.posY = 720 / (Math.random() * 2);
-    console.log(this.posY);
+    //console.log(this.posY);
   }
 
   preload() {
@@ -44,7 +44,7 @@ export class Jellyfish extends MovableObjects {
   checkDeathState() {
     if (this.isDead) {
         this.enemySprite.anims.play('dead_anim').once('animationcomplete', () => {
-            console.log('jellyfish is dead');
+            //console.log('jellyfish is dead');
             this.hasDied = true;
         });
 

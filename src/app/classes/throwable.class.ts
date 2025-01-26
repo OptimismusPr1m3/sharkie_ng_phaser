@@ -51,7 +51,7 @@ export class Throwable extends MovableObjects {
     this.scene.time.delayedCall(3000, () => {
       bubble.destroy();
       this.globalStateService.removePBubble(bubble);
-      console.log('Bubble destroyed', this.globalStateService.getPBubbles());
+      //console.log('Bubble destroyed', this.globalStateService.getPBubbles());
     });
   }
   throwWhiteBubble(
@@ -66,7 +66,7 @@ export class Throwable extends MovableObjects {
     this.scene.time.delayedCall(3000, () => {
       bubble.destroy();
       this.globalStateService.removeWBubble(bubble);
-      console.log('Bubble destroyed', this.globalStateService.getWBubbles());
+      //console.log('Bubble destroyed', this.globalStateService.getWBubbles());
     });
   } 
 }

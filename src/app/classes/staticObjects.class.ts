@@ -4,9 +4,9 @@ import { GlobalstateserviceService } from '../services/globalstate.service';
 export class StaticObjects {
   scene: Phaser.Scene;
   imageCenter: number = 1920 / 2;
-  posX!: number
-  posY!: number
-  objectSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
+  posX!: number;
+  posY!: number;
+  objectSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   globalStates: GlobalstateserviceService;
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
@@ -29,12 +29,17 @@ export class StaticObjects {
   }
 
   idle(
-      sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-      animation: string
-    ) {
-      sprite.setVelocityX(0);
-      sprite.setVelocityY(0);
-      sprite.anims.play(animation, true);
-    }
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string
+  ) {
+    sprite.setVelocityX(0);
+    sprite.setVelocityY(0);
+    sprite.anims.play(animation, true);
+  }
 
+  randomizeX(): number {
+    const min = 900;
+    const max = 1920 * 2;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 }
