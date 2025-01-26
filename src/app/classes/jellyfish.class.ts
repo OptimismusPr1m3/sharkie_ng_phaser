@@ -14,7 +14,8 @@ export class Jellyfish extends MovableObjects {
     this.height = 180;
     this.offsetX = 20;
     this.offsetY = 40;
-    this.posY = 720 / (Math.random() * 2);
+    this.posY = this.randomizePosition(200, 1000);
+    this.posX = this.randomizePosition(900, 1920 * 3);
   }
 
   preload() {

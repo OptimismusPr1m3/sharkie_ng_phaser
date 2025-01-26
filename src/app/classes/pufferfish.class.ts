@@ -12,8 +12,8 @@ export class Pufferfish extends MovableObjects {
         this.height = 150;
         this.offsetX = 10;
         this.offsetY = 0;
-        this.posY = this.randomizeX(100, 1000);
-        this.posX = this.randomizeX(900, 1920 * 2);
+        this.posY = this.randomizePosition(100, 1000);
+        this.posX = this.randomizePosition(900, 1920 * 2);
         this.speed = -10;
     }
 
