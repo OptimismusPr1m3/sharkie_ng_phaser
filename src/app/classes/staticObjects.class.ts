@@ -37,9 +37,7 @@ export class StaticObjects {
     sprite.anims.play(animation, true);
   }
 
-  randomizeX(): number {
-    const min = 900;
-    const max = 1920 * 2;
+  randomizePosition(min:number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }

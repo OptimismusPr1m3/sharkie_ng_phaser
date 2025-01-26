@@ -2,7 +2,10 @@ import { GlobalstateserviceService } from '../services/globalstate.service';
 import { MovableObjects } from './movableObjects.class';
 
 export class Jellyfish extends MovableObjects {
+
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  
+
   constructor(
     scene: Phaser.Scene, globalStates: GlobalstateserviceService
   ) {
@@ -12,7 +15,6 @@ export class Jellyfish extends MovableObjects {
     this.offsetX = 20;
     this.offsetY = 40;
     this.posY = 720 / (Math.random() * 2);
-    //console.log(this.posY);
   }
 
   preload() {
@@ -44,7 +46,6 @@ export class Jellyfish extends MovableObjects {
   checkDeathState() {
     if (this.isDead) {
         this.enemySprite.anims.play('dead_anim').once('animationcomplete', () => {
-            //console.log('jellyfish is dead');
             this.hasDied = true;
         });
 

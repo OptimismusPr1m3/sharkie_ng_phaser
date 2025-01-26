@@ -7,8 +7,8 @@ export class Potions extends StaticObjects {
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     super(scene, globalStates);
-    this.posX = this.randomizeX();
-    this.posY = 100;
+    this.posX = this.randomizePosition(900, 1920 * 2);
+    this.posY = this.randomizePosition(900, 1000); // max 1000 min 
   }
 
   preload() {
@@ -18,7 +18,7 @@ export class Potions extends StaticObjects {
   create() {
     this.objectSprite = this.scene.physics.add
       .sprite(this.posX, this.posY, 'potion1')
-      .setScale(0.5)
+      .setScale(0.6)
       this.objectSprite.setBounce(0.5)
       this.objectSprite.setCollideWorldBounds(true)
       this.objectSprite.body.setSize(120, 120)

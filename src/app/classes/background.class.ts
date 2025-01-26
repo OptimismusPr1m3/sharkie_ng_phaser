@@ -19,10 +19,10 @@ export class Background extends StaticObjects {
   create() {
     this.scene.add.image(this.imageCenter, 1080 / 2, 'water').setScrollFactor(0.4);
     this.scene.add.image(this.imageCenter, 1080 / 2.2, 'bg3').setScrollFactor(0.6);
-    this.scene.add.image(this.imageCenter, 1080 / 2, 'bg1').setScrollFactor(0.8);
+    this.scene.add.image(this.imageCenter, 1080 / 2, 'bg1');
 
     this.scene.add.image(this.imageCenter * 3, 1080 / 2, 'water').setScrollFactor(0.4);
     this.scene.add.image(this.imageCenter * 3, 1080 / 2.2, 'bg4').setScrollFactor(0.6);
-    this.scene.add.image(this.imageCenter * 3, 1080 / 2, 'bg2').setScrollFactor(0.8);
+    this.scene.add.image(this.imageCenter * 3, 1080 / 2, 'bg2');
   }
 }

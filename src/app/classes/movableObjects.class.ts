@@ -87,4 +87,8 @@ export class MovableObjects {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  getChosenJellyFish(chosenFish: string, textureString1: string, textureString2: string): string {
+    return chosenFish === 'lila' ? textureString1 : textureString2;
+  }
+
 }

@@ -12,7 +12,7 @@ export class Pufferfish extends MovableObjects {
         this.height = 150;
         this.offsetX = 10;
         this.offsetY = 0;
-        this.posY = 720 / (Math.random() * 2);
+        this.posY = this.randomizeX(100, 1000);
         this.posX = this.randomizeX(900, 1920 * 2);
         this.speed = -10;
     }
@@ -29,7 +29,6 @@ export class Pufferfish extends MovableObjects {
             .sprite(this.posX, this.posY, 'pufferfish_swim1')
             .setScale(0.5);
         this.enemySprite.setBounce(0.0);
-        this.enemySprite.setCollideWorldBounds(true);
         this.enemySprite.body.setSize(this.width, this.height);
         this.enemySprite.body.setOffset(this.offsetX, this.offsetY);
         this.loadAnimations();

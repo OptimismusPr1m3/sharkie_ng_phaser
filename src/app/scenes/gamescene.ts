@@ -148,13 +148,13 @@ export class Gamescene extends Phaser.Scene {
   }
 
   setupPhysicsGroups() {
-    this.enemiesGroup = this.physics.add.group({collideWorldBounds: true});
+    this.enemiesGroup = this.physics.add.group({collideWorldBounds: false});
     this.enemies.forEach((enemy) => {
       enemy.create();
       this.enemiesGroup.add(enemy.enemySprite);
     });
 
-    this.potionsGroup = this.physics.add.group({collideWorldBounds: true});
+    this.potionsGroup = this.physics.add.group({collideWorldBounds: false});
     this.objects.forEach((obj) => {
       obj.create();
       this.potionsGroup.add(obj.objectSprite);
@@ -204,7 +204,7 @@ export class Gamescene extends Phaser.Scene {
       enemy.enemySprite.x,
       enemy.enemySprite.y
     );
-    if (distance < 300 && this.globalStateService.hasSlapped()) {
+    if (distance < 320 && this.globalStateService.hasSlapped()) {
       console.log('Slap collision with Pufferfish');
       enemy.isDead = true;
       enemy.enemySprite.setVelocityX(0);
