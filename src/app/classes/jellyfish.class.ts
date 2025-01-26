@@ -25,7 +25,7 @@ export class Jellyfish extends MovableObjects {
 
   create() {
     this.enemySprite = this.scene.physics.add
-      .sprite(500, this.posY, 'aggro_swim1')
+      .sprite(this.posX, this.posY, 'aggro_swim1')
         .setScale(0.7);
     this.enemySprite.setBounce(0.0);
     this.enemySprite.setCollideWorldBounds(true);
