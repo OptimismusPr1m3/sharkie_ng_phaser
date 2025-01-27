@@ -7,14 +7,15 @@ import { Pufferfish } from '../classes/pufferfish.class';
 import { StaticObjects } from '../classes/staticObjects.class';
 import { Potions } from '../classes/potions.class';
 import { Progressbar } from '../classes/progressbar.class';
+import { Coins } from '../classes/coins.class';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
   private player!: Player;
   private enemies: Jellyfish[] | Pufferfish[] = [];
-  private objects: Potions[] = [];
+  private objects: Potions[] | Coins[] = [];
   private enemiesGroup!: Phaser.Physics.Arcade.Group;
-  private potionsGroup!: Phaser.Physics.Arcade.Group;
+  private objectsGroup!: Phaser.Physics.Arcade.Group;
   private progressBars: Progressbar[] = [];
 
   constructor(public globalStateService: GlobalstateserviceService) {
@@ -42,6 +43,12 @@ export class Gamescene extends Phaser.Scene {
       new Potions(this, this.globalStateService),
       new Potions(this, this.globalStateService),
       new Potions(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
+      new Coins(this, this.globalStateService),
     ];
   }
 
@@ -101,7 +108,7 @@ export class Gamescene extends Phaser.Scene {
     );
     this.physics.add.overlap(
       this.player.playerSprite,
-      this.potionsGroup,
+      this.objectsGroup,
       this.handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
@@ -127,14 +134,21 @@ export class Gamescene extends Phaser.Scene {
     player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     potion: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) {
-    const hitPotion = this.objects.find((p) => p.objectSprite === potion)
-    if (hitPotion) {
-      const index = this.findIndexFromArray(this.objects, hitPotion);
+    const hitObject = this.objects.find((p) => p.objectSprite === potion)
+    if (hitObject instanceof Potions) {
+      const index = this.findIndexFromArray(this.objects, hitObject);
       console.log('Kollision mitPotion!');
-      hitPotion.hasPickedUp = true;
-      hitPotion.objectSprite.destroy();
+      hitObject.hasPickedUp = true;
+      hitObject.objectSprite.destroy();
       this.deleteIndexFromArray(this.objects, index);
       this.globalStateService.modifyProgressbar('potions', 1);
+    } else if (hitObject instanceof Coins) {
+      const index = this.findIndexFromArray(this.objects, hitObject);
+      console.log('Kollision mit Coin!');
+      hitObject.hasPickedUp = true;
+      hitObject.objectSprite.destroy();
+      this.deleteIndexFromArray(this.objects, index);
+      this.globalStateService.modifyProgressbar('coin', 1);
     }
     console.log(this.objects)
   }
@@ -154,10 +168,10 @@ export class Gamescene extends Phaser.Scene {
       this.enemiesGroup.add(enemy.enemySprite);
     });
 
-    this.potionsGroup = this.physics.add.group({collideWorldBounds: false});
+    this.objectsGroup = this.physics.add.group({collideWorldBounds: false});
     this.objects.forEach((obj) => {
       obj.create();
-      this.potionsGroup.add(obj.objectSprite);
+      this.objectsGroup.add(obj.objectSprite);
     });
   }
 

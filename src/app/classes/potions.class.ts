@@ -3,12 +3,12 @@ import { StaticObjects } from './staticObjects.class';
 
 export class Potions extends StaticObjects {
 
-  hasPickedUp: boolean = false;
+ 
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     super(scene, globalStates);
     this.posX = this.randomizePosition(900, 1920 * 2);
-    this.posY = this.randomizePosition(900, 1000); // max 1000 min 
+    this.posY = this.randomizePosition(900, 1000);
   }
 
   preload() {

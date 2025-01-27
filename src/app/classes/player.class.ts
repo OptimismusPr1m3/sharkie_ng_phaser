@@ -11,6 +11,9 @@ export class Player extends MovableObjects {
   keyboardInput!: KeyboardInputs;
   throwable_pois!: Throwable;
   throwable_white!: Throwable;
+  isLongIdle: boolean = false;
+  idleThreshold: number = 3000;
+  lastInputTime: number = 0;
 
   constructor(
     scene: Phaser.Scene,
@@ -89,11 +92,25 @@ export class Player extends MovableObjects {
       keys.right.isDown
     ) {
       this.manageMovement(keys);
+      this.isLongIdle = false;
+      this.lastInputTime = this.scene.time.now;
     } else if (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) {
       this.manageAttacks(keys);
+      this.isLongIdle = false;
+      this.lastInputTime = this.scene.time.now;
+    } else if (this.scene.time.now - this.lastInputTime > this.idleThreshold) {
+      this.manageLongIdle();
     } else {
       this.idle(this.playerSprite, 'idle');
     }
+  }
+
+  manageLongIdle() {
+    if (this.isLongIdle) return;
+    this.isLongIdle = true;
+    this.playerSprite.anims.play('long_idle_transition').once('animationcomplete', () => {
+      this.playerSprite.anims.play('long_idle_anim');
+    });
   }
 
   manageMovement(keys: CustomKeys) {
@@ -172,9 +189,15 @@ export class Player extends MovableObjects {
       repeat: -1,
     });
     this.scene.anims.create({
-      key: 'long_idle',
+      key: 'long_idle_transition',
       frames: this.getSpriteImages('long_idle_anim', 14),
-      frameRate: 9,
+      frameRate: 6,
+      repeat: 0,
+    });
+    this.scene.anims.create({
+      key: 'long_idle_anim',
+      frames: this.getSpriteImages('long_idle_anim', 14).slice(9, 14),
+      frameRate: 3,
       repeat: -1,
     });
 

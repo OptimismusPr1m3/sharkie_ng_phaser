@@ -3,6 +3,7 @@ import { GlobalstateserviceService } from '../services/globalstate.service';
 
 export class StaticObjects {
   scene: Phaser.Scene;
+  hasPickedUp: boolean = false;
   imageCenter: number = 1920 / 2;
   posX!: number;
   posY!: number;
