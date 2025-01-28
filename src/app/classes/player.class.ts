@@ -14,7 +14,8 @@ export class Player extends MovableObjects {
   isLongIdle: boolean = false;
   idleThreshold: number = 3000;
   lastInputTime: number = 0;
-
+  isHit: boolean = false;
+  damageCooldown: boolean = false;
   constructor(
     scene: Phaser.Scene,
     public globalStateService: GlobalstateserviceService
@@ -48,11 +49,21 @@ export class Player extends MovableObjects {
     this.loadImages(6, 'swim_anim', 'assets/sharkie/swim/');
     // ATTACK ANIMATIONS
     // Bubble Trap
-    this.loadImages(8, 'green_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/green/'
+    this.loadImages(
+      8,
+      'green_bubble_trap_anim',
+      'assets/sharkie/attack/bubble_trap/green/'
     );
-    this.loadImages(8,'no_bubble_trap_anim','assets/sharkie/attack/bubble_trap/no_bubble/'
+    this.loadImages(
+      8,
+      'no_bubble_trap_anim',
+      'assets/sharkie/attack/bubble_trap/no_bubble/'
     );
-    this.loadImages(8, 'white_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/white/');
+    this.loadImages(
+      8,
+      'white_bubble_trap_anim',
+      'assets/sharkie/attack/bubble_trap/white/'
+    );
     // Fin Slap
     this.loadImages(8, 'fin_slap_anim', 'assets/sharkie/attack/fin_slap/');
     //HURT ANIMATIONS
@@ -86,21 +97,23 @@ export class Player extends MovableObjects {
     if (this.isAttacking) return;
 
     if (
-      keys.down.isDown ||
+      (keys.down.isDown ||
       keys.up.isDown ||
       keys.left.isDown ||
-      keys.right.isDown
+      keys.right.isDown) && !this.isHit
     ) {
       this.manageMovement(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) {
+    } else if ((keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) && !this.isHit) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if (this.scene.time.now - this.lastInputTime > this.idleThreshold) {
+    } else if (
+      this.scene.time.now - this.lastInputTime > this.idleThreshold && !this.isHit
+    ) {
       this.manageLongIdle();
-    } else {
+    } else if (!this.isHit) {
       this.idle(this.playerSprite, 'idle');
     }
   }
@@ -108,9 +121,29 @@ export class Player extends MovableObjects {
   manageLongIdle() {
     if (this.isLongIdle) return;
     this.isLongIdle = true;
-    this.playerSprite.anims.play('long_idle_transition').once('animationcomplete', () => {
-      this.playerSprite.anims.play('long_idle_anim');
+    this.playerSprite.anims
+      .play('long_idle_transition')
+      .once('animationcomplete', () => {
+        this.playerSprite.anims.play('long_idle_anim');
+      });
+  }
+
+  hasBeenHit(damage: number) {
+    if (this.damageCooldown)return;
+
+    this.isHit = true;
+    this.damageCooldown = true;
+    this.playerSprite.setVelocity(0);
+    this.playerSprite.anims.play('poisoned_hurt').once('animationcomplete', () => {
+      this.idle(this.playerSprite, 'idle');
+      this.globalStateService.modifyProgressbar('health', damage);
+      this.isHit = false;
+    })
+
+    this.scene.time.delayedCall(4000, () => {
+      this.damageCooldown = false;
     });
+
   }
 
   manageMovement(keys: CustomKeys) {
@@ -239,8 +272,8 @@ export class Player extends MovableObjects {
     this.scene.anims.create({
       key: 'poisoned_hurt',
       frames: this.getSpriteImages('poisoned_hurt_anim', 5),
-      frameRate: 9,
-      repeat: -1,
+      frameRate: 6,
+      repeat: 0,
     });
     this.scene.anims.create({
       key: 'shock_hurt',

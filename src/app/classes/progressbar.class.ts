@@ -77,10 +77,10 @@ export class Progressbar extends StaticObjects {
   }
 
   update() {
-    this.setTexture(this.barName)
+    this.setTextures(this.barName)
   }
 
-  setTexture(bar: string) {
+  setTextures(bar: string) {
     switch (bar) {
       case 'potions':
         const barIndex = this.globalStates.currentPotions();

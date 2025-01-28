@@ -81,7 +81,7 @@ export class Gamescene extends Phaser.Scene {
   create() {
     this.physics.world.setBounds(0, 0, 1920 * 2, 1080);
     this.background.create();
-    this.createObjects(this.progressBars)
+    this.createObjects(this.progressBars);
     this.setupPhysicsGroups();
 
     this.player.create();
@@ -102,39 +102,49 @@ export class Gamescene extends Phaser.Scene {
     this.physics.add.overlap(
       this.player.playerSprite,
       this.enemiesGroup,
-      this.handlePlayerEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this
+        .handlePlayerEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     );
     this.physics.add.overlap(
       this.player.playerSprite,
       this.objectsGroup,
-      this.handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this
+        .handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
-    )
+    );
   }
 
   handlePlayerEnemyCollision(
     player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) {
-    const hitEnemy = this.enemies.find((e) => e.enemySprite === enemy)
-    if (hitEnemy instanceof Pufferfish) {
-      //console.log('Kollision mit einem Pufferfish!');
-      this.checkPufferfishProximity(hitEnemy);
-      this.checkSlapCollision(hitEnemy);
-    } else if (hitEnemy instanceof Jellyfish) {
-      //console.log('Kollision mit einem Jellyfish!');
-    }
-    //console.log(this.enemies)
+    if (this.player.damageCooldown) return;  
+    this.player.hasBeenHit(-1);
   }
+
+  // handlePlayerEnemyCollision(
+  //   player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+  //   enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+  // ) {
+  //   const hitEnemy = this.enemies.find((e) => e.enemySprite === enemy)
+  //   if (hitEnemy instanceof Pufferfish) {
+
+  //     this.checkPufferfishProximity(hitEnemy);
+  //     this.checkSlapCollision(hitEnemy);
+  //   } else if (hitEnemy instanceof Jellyfish) {
+  //     //console.log('Kollision mit einem Jellyfish!');
+  //   }
+  //   //console.log(this.enemies)
+  // }
 
   handlePlayerPotionCollision(
     player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     potion: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) {
-    const hitObject = this.objects.find((p) => p.objectSprite === potion)
+    const hitObject = this.objects.find((p) => p.objectSprite === potion);
     if (hitObject instanceof Potions) {
       const index = this.findIndexFromArray(this.objects, hitObject);
       console.log('Kollision mitPotion!');
@@ -150,7 +160,7 @@ export class Gamescene extends Phaser.Scene {
       this.deleteIndexFromArray(this.objects, index);
       this.globalStateService.modifyProgressbar('coin', 1);
     }
-    console.log(this.objects)
+    console.log(this.objects);
   }
 
   deleteIndexFromArray(array: any[], index: number) {
@@ -162,13 +172,13 @@ export class Gamescene extends Phaser.Scene {
   }
 
   setupPhysicsGroups() {
-    this.enemiesGroup = this.physics.add.group({collideWorldBounds: false});
+    this.enemiesGroup = this.physics.add.group({ collideWorldBounds: false });
     this.enemies.forEach((enemy) => {
       enemy.create();
       this.enemiesGroup.add(enemy.enemySprite);
     });
 
-    this.objectsGroup = this.physics.add.group({collideWorldBounds: false});
+    this.objectsGroup = this.physics.add.group({ collideWorldBounds: false });
     this.objects.forEach((obj) => {
       obj.create();
       this.objectsGroup.add(obj.objectSprite);
