@@ -5,6 +5,7 @@ export class Jellyfish extends MovableObjects {
 
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   
+  
 
   constructor(
     scene: Phaser.Scene, globalStates: GlobalstateserviceService
@@ -16,6 +17,7 @@ export class Jellyfish extends MovableObjects {
     this.offsetY = 40;
     this.posY = this.randomizePosition(200, 1000);
     this.posX = this.randomizePosition(900, 1920 * 3);
+    this.setUpJelly()
   }
 
   preload() {
@@ -34,13 +36,29 @@ export class Jellyfish extends MovableObjects {
     this.loadAnimations();
   }
 
+  setUpJelly() {
+    this.frameRate = -this.randomizePosition(4, 9)
+    if (this.frameRate < -8  || this.frameRate < -6) {
+      this.speed = -20
+      console.log('FrameRate: ', this.frameRate)
+    } else if (this.frameRate < -6 || this.frameRate < -4) {
+      console.log('FrameRate: ', this.frameRate)
+      this.speed = -85
+    } else {
+      console.log('FrameRate: ', this.frameRate)
+      this.speed = -120
+    }
+
+    console.log(this.speed)
+  }
+
   update() {
     this.manageEnemy();
   } 
 
   manageEnemy() {
     if (!this.isDead) {
-      this.idle(this.enemySprite, 'aggro_swim_anim');
+      this.moveX(this.enemySprite, this.speed, 'aggro_swim_anim', false);
     }
   }
 

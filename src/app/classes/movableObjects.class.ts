@@ -15,6 +15,7 @@ export class MovableObjects {
   speed!: number;
   isDead: boolean = false;
   hasDied: boolean = false;
+  frameRate!: number;
   globalStates: GlobalstateserviceService;
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {

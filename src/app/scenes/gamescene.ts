@@ -8,11 +8,13 @@ import { StaticObjects } from '../classes/staticObjects.class';
 import { Potions } from '../classes/potions.class';
 import { Progressbar } from '../classes/progressbar.class';
 import { Coins } from '../classes/coins.class';
+import { Boss } from '../classes/boss.class';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
   private player!: Player;
-  private enemies: Jellyfish[] | Pufferfish[] = [];
+  private boss!: Boss;
+  private enemies: (Jellyfish | Pufferfish)[] = [];
   private objects: Potions[] | Coins[] = [];
   private enemiesGroup!: Phaser.Physics.Arcade.Group;
   private objectsGroup!: Phaser.Physics.Arcade.Group;
@@ -22,6 +24,7 @@ export class Gamescene extends Phaser.Scene {
     super({ key: 'Gamescene' });
     this.background = new Background(this, globalStateService);
     this.player = new Player(this, globalStateService);
+    this.boss = new Boss(this, globalStateService);
     this.progressBars = [
       new Progressbar(this, 'health', globalStateService, 50),
       new Progressbar(this, 'coin', globalStateService, 190),
@@ -76,6 +79,7 @@ export class Gamescene extends Phaser.Scene {
     this.objects.forEach((obj) => obj.preload());
     this.progressBars.forEach((bar) => bar.preload());
     this.player.preload();
+    this.boss.preload();
   }
 
   create() {
@@ -84,7 +88,9 @@ export class Gamescene extends Phaser.Scene {
     this.createObjects(this.progressBars);
     this.setupPhysicsGroups();
 
+    
     this.player.create();
+    this.boss.create()
 
     this.cameras.main.startFollow(
       this.player.playerSprite,
@@ -191,7 +197,9 @@ export class Gamescene extends Phaser.Scene {
     this.updateObjects(this.enemies);
     this.updateObjects(this.objects);
     this.updateObjects(this.progressBars);
+    this.boss.update();
     this.garbageCollection();
+
   }
 
   checkCollisions(objects: any) {
@@ -251,7 +259,7 @@ export class Gamescene extends Phaser.Scene {
   poisonedBubbleCollisionCheck() {
     const bubbles = this.player.getPBubbles();
     bubbles.forEach((bubble) => {
-      this.enemies.forEach((enemy: Jellyfish) => {
+          this.enemies.forEach((enemy) => {
         if (this.physics.overlap(bubble, enemy.enemySprite)) {
           this.globalStateService.removePBubble(bubble);
           bubble.destroy();
@@ -265,7 +273,7 @@ export class Gamescene extends Phaser.Scene {
   whiteBubbleCollisionCheck() {
     const bubbles = this.player.getWBubbles();
     bubbles.forEach((bubble) => {
-      this.enemies.forEach((enemy: Jellyfish) => {
+      this.enemies.forEach((enemy) => {
         if (
           enemy instanceof Jellyfish &&
           this.physics.overlap(bubble, enemy.enemySprite)
