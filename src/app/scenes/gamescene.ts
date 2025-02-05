@@ -199,7 +199,7 @@ export class Gamescene extends Phaser.Scene {
     this.updateObjects(this.progressBars);
     this.boss.update();
     this.garbageCollection();
-
+    this.calculateBossDistance();
   }
 
   checkCollisions(objects: any) {
@@ -209,7 +209,7 @@ export class Gamescene extends Phaser.Scene {
         this.checkSlapCollision(obj);
       }
     });
-    //this.poisonedBubbleCollisionCheck();
+    this.poisonedBubbleCollisionCheck();
     this.whiteBubbleCollisionCheck();
   }
 
@@ -254,20 +254,36 @@ export class Gamescene extends Phaser.Scene {
         this.deleteIndexFromArray(this.enemies, index);
       }
     });
+    if (this.boss.hasDied) {
+      this.boss.bossSprite.destroy();
+    }
   }
 
   poisonedBubbleCollisionCheck() {
     const bubbles = this.player.getPBubbles();
     bubbles.forEach((bubble) => {
-          this.enemies.forEach((enemy) => {
-        if (this.physics.overlap(bubble, enemy.enemySprite)) {
+        if (this.physics.overlap(bubble, this.boss.bossSprite)) {
           this.globalStateService.removePBubble(bubble);
           bubble.destroy();
-          enemy.isDead = true;
-          enemy.enemySprite.destroy();
+          this.boss.healthPoints -= 25;
+          this.boss.isHurted = true;
         }
-      });
     });
+  }
+
+  calculateBossDistance() {
+    const distance = Phaser.Math.Distance.Between(
+      this.player.playerSprite.x,
+      this.player.playerSprite.y,
+      this.boss.bossSprite.x,
+      this.boss.bossSprite.y
+    );
+    // 1220 distance for spawn in boss
+    console.log('Distance to boss: ', distance);
+    if (distance < 1220 && !this.boss.hasSpawned) {
+      this.boss.isSpawning = true;
+    }
+
   }
 
   whiteBubbleCollisionCheck() {

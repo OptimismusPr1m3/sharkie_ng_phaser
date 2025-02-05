@@ -2,6 +2,9 @@ import { GlobalstateserviceService } from '../services/globalstate.service';
 import { MovableObjects } from './movableObjects.class';
 
 export class Boss extends MovableObjects {
+  isHurted: boolean = false;
+  isSpawning: boolean = false;
+  hasSpawned: boolean = false;
   bossSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
@@ -11,7 +14,7 @@ export class Boss extends MovableObjects {
     this.offsetX = 50;
     this.offsetY = 500;
     this.posY = this.randomizePosition(400, 600);
-    this.posX = this.randomizePosition(300, 820 * 3);
+    this.posX = this.randomizePosition(1920, 4260);
   }
 
   preload() {
@@ -24,8 +27,8 @@ export class Boss extends MovableObjects {
 
   create() {
     this.bossSprite = this.scene.physics.add
-      .sprite(this.posX, this.posY, 'boss_idle1')
-      .setScale(0.6)
+      .sprite(this.posX, this.posY, 'boss_spawn1')
+      .setScale(0.6);
     this.bossSprite.setBounce(0.0);
     this.bossSprite.setCollideWorldBounds(true);
     this.bossSprite.body.setSize(this.width, this.height);
@@ -35,12 +38,52 @@ export class Boss extends MovableObjects {
 
   update() {
     this.manageBoss();
+    this.checkHealth();
   }
 
   manageBoss() {
-    if (!this.isDead && !this.isAttacking) {
+    if (!this.isDead && !this.isAttacking && !this.isHurted && !this.isSpawning && this. hasSpawned) {
       this.idle(this.bossSprite, 'boss_idle_anim');
+    } else if (this.isHurted) {
+      this.bossHurt();
+    } else if (this.isDead && !this.hasDied && !this.isSpawning) {
+      this.bossDeath();
+    } else if (this.isSpawning && !this.hasSpawned) {
+      this.bossSpawn();
     }
+
+  }
+
+  checkHealth() {
+    if (this.healthPoints <= 0) {
+      this.isDead = true;
+    }
+  }
+
+  bossHurt() {
+    this.bossSprite.anims
+      .play('boss_hurt_anim', true)
+      .once('animationcomplete', () => {
+        console.log('Boss health: ', this.healthPoints);
+        this.isHurted = false;
+      });
+  }
+
+  bossDeath() {
+    this.bossSprite.anims
+      .play('boss_dead_anim', true)
+      .once('animationcomplete', () => {
+        this.hasDied = true; 
+      });
+  }
+
+  bossSpawn() {
+    this.bossSprite.anims
+      .play('boss_spawn_anim', true)
+      .once('animationcomplete', () => {
+        this.hasSpawned = true;
+        this.isSpawning = false;
+      });
   }
 
   loadAnimations() {
@@ -51,6 +94,38 @@ export class Boss extends MovableObjects {
         frameRate: 8,
         repeat: -1,
       });
+    }
+    if (!this.scene.anims.exists('boss_hurt_anim')) {
+      this.scene.anims.create({
+        key: 'boss_hurt_anim',
+        frames: this.getSpriteImages('boss_hurt', 4),
+        frameRate: 8,
+        repeat: 0,
+      });
+    }
+    if (!this.scene.anims.exists('boss_dead_anim')) {
+      this.scene.anims.create({
+        key: 'boss_dead_anim',
+        frames: this.getSpriteImages('boss_dead', 6),
+        frameRate: 8,
+        repeat: 0,
+      });
+    }
+    if (!this.scene.anims.exists('boss_attacking_anim')) {
+      this.scene.anims.create({
+        key: 'boss_attacking_anim',
+        frames: this.getSpriteImages('boss_attacking', 6),
+        frameRate: 8,
+        repeat: 0,
+      });
+    }
+    if (!this.scene.anims.exists('boss_spawn_anim')) {
+      this.scene.anims.create({
+        key: 'boss_spawn_anim',
+        frames: this.getSpriteImages('boss_spawn', 10),
+        frameRate: 8,
+        repeat: 0,
+      });  
     }
   }
 }
