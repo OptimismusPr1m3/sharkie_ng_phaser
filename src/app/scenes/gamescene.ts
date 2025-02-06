@@ -4,7 +4,6 @@ import { Player } from '../classes/player.class';
 import { Jellyfish } from '../classes/jellyfish.class';
 import { GlobalstateserviceService } from '../services/globalstate.service';
 import { Pufferfish } from '../classes/pufferfish.class';
-import { StaticObjects } from '../classes/staticObjects.class';
 import { Potions } from '../classes/potions.class';
 import { Progressbar } from '../classes/progressbar.class';
 import { Coins } from '../classes/coins.class';
@@ -206,11 +205,11 @@ export class Gamescene extends Phaser.Scene {
     objects.forEach((obj: any) => {
       if (obj instanceof Pufferfish) {
         this.checkPufferfishProximity(obj);
-        this.checkSlapCollision(obj);
       }
     });
     this.poisonedBubbleCollisionCheck();
     this.whiteBubbleCollisionCheck();
+    this.checkSlapCollision();
   }
 
   checkPufferfishProximity(enemy: Pufferfish) {
@@ -225,24 +224,6 @@ export class Gamescene extends Phaser.Scene {
     if (distance < 500) {
       enemy.isAggro = true;
       enemy.checkAggroState();
-    }
-  }
-
-  checkSlapCollision(enemy: Pufferfish) {
-    if (enemy.isDead) return;
-    const distance = Phaser.Math.Distance.Between(
-      this.player.playerSprite.x,
-      this.player.playerSprite.y,
-      enemy.enemySprite.x,
-      enemy.enemySprite.y
-    );
-    if (distance < 320 && this.globalStateService.hasSlapped()) {
-      console.log('Slap collision with Pufferfish');
-      enemy.isDead = true;
-      enemy.enemySprite.setVelocityX(0);
-      enemy.checkDeathState();
-    } else {
-      this.globalStateService.hasSlapped.set(false);
     }
   }
 
@@ -279,7 +260,7 @@ export class Gamescene extends Phaser.Scene {
       this.boss.bossSprite.y
     );
     // 1220 distance for spawn in boss
-    console.log('Distance to boss: ', distance);
+    //console.log('Distance to boss: ', distance);
     if (distance < 1220 && !this.boss.hasSpawned) {
       this.boss.isSpawning = true;
     }
@@ -300,6 +281,20 @@ export class Gamescene extends Phaser.Scene {
           enemy.checkDeathState();
         }
       });
+    });
+  }
+
+  checkSlapCollision() {
+    const slapBoxes = this.globalStateService.getSlapBoxes();
+    slapBoxes.forEach((slapBox) => {
+      this.enemies.forEach((enemy) => {
+        if (this.physics.overlap(slapBox, enemy.enemySprite)) {
+          this.globalStateService.removeSlapBox(slapBox);
+          slapBox.destroy();
+          enemy.isDead = true;
+          enemy.checkDeathState();
+        }
+      })
     });
   }
 }

@@ -11,6 +11,7 @@ export class Player extends MovableObjects {
   keyboardInput!: KeyboardInputs;
   throwable_pois!: Throwable;
   throwable_white!: Throwable;
+  slapBox!: Throwable;
   isLongIdle: boolean = false;
   idleThreshold: number = 3000;
   lastInputTime: number = 0;
@@ -39,6 +40,7 @@ export class Player extends MovableObjects {
       'assets/sharkie/attack/bubble_trap/white_bubble.png',
       globalStateService
     );
+    this.slapBox = new Throwable(scene, 'slap_box', 'assets/sharkie/attack/bubble_trap/white_bubble.png', globalStateService);
   }
 
   preload() {
@@ -75,6 +77,7 @@ export class Player extends MovableObjects {
     this.keyboardInput.initializeInputs();
     this.throwable_pois.preload();
     this.throwable_white.preload();
+    this.slapBox.preload();
   }
 
   create() {
@@ -98,19 +101,24 @@ export class Player extends MovableObjects {
 
     if (
       (keys.down.isDown ||
-      keys.up.isDown ||
-      keys.left.isDown ||
-      keys.right.isDown) && !this.isHit
+        keys.up.isDown ||
+        keys.left.isDown ||
+        keys.right.isDown) &&
+      !this.isHit
     ) {
       this.manageMovement(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if ((keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) && !this.isHit) {
+    } else if (
+      (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
+      !this.isHit
+    ) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
-      this.scene.time.now - this.lastInputTime > this.idleThreshold && !this.isHit
+      this.scene.time.now - this.lastInputTime > this.idleThreshold &&
+      !this.isHit
     ) {
       this.manageLongIdle();
     } else if (!this.isHit) {
@@ -129,21 +137,22 @@ export class Player extends MovableObjects {
   }
 
   hasBeenHit(damage: number) {
-    if (this.damageCooldown)return;
+    if (this.damageCooldown) return;
 
     this.isHit = true;
     this.damageCooldown = true;
     this.playerSprite.setVelocity(0);
-    this.playerSprite.anims.play('poisoned_hurt').once('animationcomplete', () => {
-      this.idle(this.playerSprite, 'idle');
-      this.globalStateService.modifyProgressbar('health', damage);
-      this.isHit = false;
-    })
+    this.playerSprite.anims
+      .play('poisoned_hurt')
+      .once('animationcomplete', () => {
+        this.idle(this.playerSprite, 'idle');
+        this.globalStateService.modifyProgressbar('health', damage);
+        this.isHit = false;
+      });
 
     this.scene.time.delayedCall(4000, () => {
       this.damageCooldown = false;
     });
-
   }
 
   manageMovement(keys: CustomKeys) {
@@ -171,8 +180,28 @@ export class Player extends MovableObjects {
       this.bubbleAttack(this.playerSprite, 'white_bubble_trap', false);
     } else if (keys.slap?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
-      this.attackAnimation(this.playerSprite, 'fin_slap', 'idle');
+      this.finSlapAttack(this.playerSprite, 'fin_slap');
+      //this.attackAnimation(this.playerSprite, 'fin_slap', 'idle');
     }
+  }
+
+  finSlapAttack(
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string
+  ) {
+    if (this.isAttacking) return;
+    sprite.setVelocity(0);
+    this.isAttacking = true;
+    sprite.anims.play(animation).once('animationcomplete', () => {
+      this.slapBox.spawnThrowable(
+        sprite.flipX ? sprite.x - 100 : sprite.x + 100,
+        sprite.y + 40,
+        sprite.flipX ? -2000 : 2000,
+        'slap'
+      );
+      this.isAttacking = false;
+      this.attackKeyPressed = false;
+    });
   }
 
   bubbleAttack(
@@ -184,7 +213,7 @@ export class Player extends MovableObjects {
     sprite.setVelocity(0);
     this.isAttacking = true;
     sprite.anims.play(animation).once('animationcomplete', () => {
-      this.idle(sprite, 'idle');
+      //this.idle(sprite, 'idle');
       this.isAttacking = false;
       if (isPooisoned) {
         this.globalStateService.modifyProgressbar('potions', -1);

@@ -10,6 +10,7 @@ export class GlobalstateserviceService {
   activeWBubbles = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>(
     []
   );
+  activeSlapBoxes = signal<Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>([]);
   hasSlapped = signal<boolean>(false);
   currentPotions = signal<number>(1);
   currentCoins = signal<number>(1);
@@ -19,6 +20,9 @@ export class GlobalstateserviceService {
 
   getPBubbles() {
     return this.activePBubbles();
+  }
+  getSlapBoxes() {
+    return this.activeSlapBoxes();
   }
 
   modifyProgressbar(barName: string, value: number) {
@@ -73,4 +77,15 @@ export class GlobalstateserviceService {
     const bubbles = this.activeWBubbles();
     this.activeWBubbles.set(bubbles.filter((b) => b !== bubble));
   }
+
+  addSlapBox(slapBox: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const slapBoxes = this.activeSlapBoxes();
+    this.activeSlapBoxes.set([...slapBoxes, slapBox]);
+  }
+
+  removeSlapBox(slapBox: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    const slapBoxes = this.activeSlapBoxes();
+    this.activeSlapBoxes.set(slapBoxes.filter((b) => b !== slapBox));
+  }
+
 }
