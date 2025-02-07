@@ -172,16 +172,18 @@ export class Player extends MovableObjects {
   manageAttacks(keys: CustomKeys) {
     if (this.isAttacking) return;
 
-    if (keys.space?.isDown && !this.attackKeyPressed) {
+    if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() > 1) {
       this.attackKeyPressed = true;
       this.bubbleAttack(this.playerSprite, 'green_bubble_trap', true);
+    } else if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() == 1) {
+      this.attackKeyPressed = true;
+      this.noBubbleAttack(this.playerSprite, 'no_bubble_trap');
     } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
       this.bubbleAttack(this.playerSprite, 'white_bubble_trap', false);
     } else if (keys.slap?.isDown && !this.attackKeyPressed) {
       this.attackKeyPressed = true;
       this.finSlapAttack(this.playerSprite, 'fin_slap');
-      //this.attackAnimation(this.playerSprite, 'fin_slap', 'idle');
     }
   }
 
@@ -204,6 +206,16 @@ export class Player extends MovableObjects {
     });
   }
 
+  noBubbleAttack(sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
+    if (this.isAttacking) return;
+    sprite.setVelocity(0);
+    this.isAttacking = true;
+    sprite.anims.play(animation).once('animationcomplete', () => {
+      this.isAttacking = false;
+      this.attackKeyPressed = false;
+    });
+  }
+
   bubbleAttack(
     sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     animation: string,
@@ -213,7 +225,6 @@ export class Player extends MovableObjects {
     sprite.setVelocity(0);
     this.isAttacking = true;
     sprite.anims.play(animation).once('animationcomplete', () => {
-      //this.idle(sprite, 'idle');
       this.isAttacking = false;
       if (isPooisoned) {
         this.globalStateService.modifyProgressbar('potions', -1);

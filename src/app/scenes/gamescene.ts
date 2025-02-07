@@ -196,7 +196,7 @@ export class Gamescene extends Phaser.Scene {
     this.updateObjects(this.enemies);
     this.updateObjects(this.objects);
     this.updateObjects(this.progressBars);
-    this.boss.update();
+    this.boss.update(this.player.playerSprite);
     this.garbageCollection();
     this.calculateBossDistance();
   }
@@ -259,9 +259,9 @@ export class Gamescene extends Phaser.Scene {
       this.boss.bossSprite.x,
       this.boss.bossSprite.y
     );
-    // 1220 distance for spawn in boss
+    // 1120 distance for spawn in boss
     //console.log('Distance to boss: ', distance);
-    if (distance < 1220 && !this.boss.hasSpawned) {
+    if (distance < 1120 && !this.boss.hasSpawned) {
       this.boss.isSpawning = true;
     }
 

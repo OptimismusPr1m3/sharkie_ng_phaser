@@ -36,14 +36,15 @@ export class Boss extends MovableObjects {
     this.loadAnimations();
   }
 
-  update() {
-    this.manageBoss();
+  update(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    this.manageBoss(player);
     this.checkHealth();
+    //this.scene.physics.moveToObject(this.bossSprite, player, 100)
   }
 
-  manageBoss() {
-    if (!this.isDead && !this.isAttacking && !this.isHurted && !this.isSpawning && this. hasSpawned) {
-      this.idle(this.bossSprite, 'boss_idle_anim');
+  manageBoss(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    if (!this.isDead && !this.isAttacking && !this.isHurted && !this.isSpawning && this.hasSpawned) {
+      this.moveBoss(100, player)
     } else if (this.isHurted) {
       this.bossHurt();
     } else if (this.isDead && !this.hasDied && !this.isSpawning) {
@@ -52,6 +53,21 @@ export class Boss extends MovableObjects {
       this.bossSpawn();
     }
 
+  }
+
+  moveBoss(speed: number = 100, player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    if (this.scene.physics.overlap(this.bossSprite, player)) return; // provokes bug , so that boss is swimming in last direction till the hitboxes dont touch each other, after that boss is moving again to player (nice bug which is totally nice lol)
+    this.bossSprite.anims.play('boss_idle_anim', true);
+    this.scene.physics.moveToObject(this.bossSprite, player, speed);
+    this.checkDirection(player);
+  }
+
+  checkDirection(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    if (this.bossSprite.x > player.x) {
+      this.bossSprite.flipX = false;
+    } else {
+      this.bossSprite.flipX = true
+    }
   }
 
   checkHealth() {
