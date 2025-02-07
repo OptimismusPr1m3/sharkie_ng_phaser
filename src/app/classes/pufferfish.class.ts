@@ -58,6 +58,7 @@ export class Pufferfish extends MovableObjects {
 
     checkDeathState() {
         if (this.isDead) {
+            this.enemySprite.setVelocity(0);
             this.enemySprite.anims.play('pufferfish_death_anim').once('animationcomplete', () => {
                 console.log('pufferfish is dead');
                 this.hasDied = true;

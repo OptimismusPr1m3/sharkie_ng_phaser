@@ -120,30 +120,30 @@ export class Gamescene extends Phaser.Scene {
       undefined,
       this
     );
+    this.physics.add.overlap(
+      this.boss.bossSprite,
+      this.player.playerSprite,
+      this.handlePlayerBossCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this
+    )
   }
 
   handlePlayerEnemyCollision(
-    player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+    player: Phaser.Types.Physics.Arcade.GameObjectWithBody, // kann eigentlich geloescht werden
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody // kann eigentlich geloescht werden
   ) {
-    if (this.player.damageCooldown) return;  
+    if (this.player.damageCooldown) return;
+    console.log('Kollision mit einem Gegner!'); 
     this.player.hasBeenHit(-1);
   }
 
-  // handlePlayerEnemyCollision(
-  //   player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-  //   enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
-  // ) {
-  //   const hitEnemy = this.enemies.find((e) => e.enemySprite === enemy)
-  //   if (hitEnemy instanceof Pufferfish) {
-
-  //     this.checkPufferfishProximity(hitEnemy);
-  //     this.checkSlapCollision(hitEnemy);
-  //   } else if (hitEnemy instanceof Jellyfish) {
-  //     //console.log('Kollision mit einem Jellyfish!');
-  //   }
-  //   //console.log(this.enemies)
-  // }
+  handlePlayerBossCollision() {
+    if (this.player.damageCooldown) return;
+    console.log('Kollision mit Boss!');
+    this.boss.isAttacking = true;
+    this.player.hasBeenHit(-2);
+  }
 
   handlePlayerPotionCollision(
     player: Phaser.Types.Physics.Arcade.GameObjectWithBody,

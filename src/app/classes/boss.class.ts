@@ -45,14 +45,20 @@ export class Boss extends MovableObjects {
   manageBoss(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
     if (!this.isDead && !this.isAttacking && !this.isHurted && !this.isSpawning && this.hasSpawned) {
       this.moveBoss(100, player)
+      console.log('Boss is moving');
     } else if (this.isHurted) {
       this.bossHurt();
+      console.log('Boss is hurted');
     } else if (this.isDead && !this.hasDied && !this.isSpawning) {
       this.bossDeath();
+      console.log('Boss is dead');
     } else if (this.isSpawning && !this.hasSpawned) {
       this.bossSpawn();
+      console.log('Boss is spawning');
+    } else if (this.isAttacking && !this.isHurted && !this.isDead) {
+      this.bossAttack();
+      console.log('Boss is attacking');
     }
-
   }
 
   moveBoss(speed: number = 100, player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
@@ -76,6 +82,14 @@ export class Boss extends MovableObjects {
     }
   }
 
+  bossAttack() {
+    this.bossSprite.setVelocity(0);
+    this.bossSprite.anims.play('boss_attacking_anim', true).once('animationcomplete', () => {
+      this.isAttacking = false;
+      this.idle(this.bossSprite ,'boss_idle_anim');
+    });
+  }
+
   bossHurt() {
     this.bossSprite.anims
       .play('boss_hurt_anim', true)
@@ -86,6 +100,7 @@ export class Boss extends MovableObjects {
   }
 
   bossDeath() {
+    this.bossSprite.setVelocity(0);
     this.bossSprite.anims
       .play('boss_dead_anim', true)
       .once('animationcomplete', () => {

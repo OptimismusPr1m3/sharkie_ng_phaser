@@ -64,6 +64,7 @@ export class Jellyfish extends MovableObjects {
 
   checkDeathState() {
     if (this.isDead) {
+      this.enemySprite.setVelocity(0);
         this.enemySprite.anims.play('dead_anim').once('animationcomplete', () => {
             this.hasDied = true;
         });
