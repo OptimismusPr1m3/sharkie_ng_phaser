@@ -4,11 +4,12 @@ import { MovableObjects } from './movableObjects.class';
 export class Jellyfish extends MovableObjects {
 
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  color!: string
   
   
 
   constructor(
-    scene: Phaser.Scene, globalStates: GlobalstateserviceService
+    scene: Phaser.Scene, globalStates: GlobalstateserviceService, color: string
   ) {
     super(scene, globalStates);
     this.width = 180;
@@ -18,16 +19,23 @@ export class Jellyfish extends MovableObjects {
     this.posY = this.randomizePosition(200, 1000);
     this.posX = this.randomizePosition(900, 1920 * 3);
     this.setUpJelly()
+    this.color = color
   }
 
   preload() {
-    this.loadImages(4, 'aggro_swim', 'assets/enemies/jellyfish/regular_damage/Lila');
-    this.loadImages(4, 'dead_animation', 'assets/enemies/jellyfish/dead/lila/');
+    if (this.color === 'lila') {
+      this.loadImages(4, 'lila_aggro_swim', 'assets/enemies/jellyfish/regular_damage/Lila');
+      this.loadImages(4, 'lila_dead_animation', 'assets/enemies/jellyfish/dead/lila/');
+    } else if (this.color === 'yellow') {
+      this.loadImages(4, 'yellow_aggro_swim', 'assets/enemies/jellyfish/regular_damage/Yellow');
+      this.loadImages(4, 'yellow_dead_animation', 'assets/enemies/jellyfish/dead/yellow/');
+    }
+
   }
 
   create() {
     this.enemySprite = this.scene.physics.add
-      .sprite(this.posX, this.posY, 'aggro_swim1')
+      .sprite(this.posX, this.posY, `${this.color}_aggro_swim1`)
         .setScale(0.7);
     this.enemySprite.setBounce(0.0);
     this.enemySprite.setCollideWorldBounds(true);
@@ -58,14 +66,14 @@ export class Jellyfish extends MovableObjects {
 
   manageEnemy() {
     if (!this.isDead) {
-      this.moveX(this.enemySprite, this.speed, 'aggro_swim_anim', false);
+      this.moveX(this.enemySprite, this.speed, `${this.color}_aggro_swim_anim`, false);
     }
   }
 
   checkDeathState() {
     if (this.isDead) {
       this.enemySprite.setVelocity(0);
-        this.enemySprite.anims.play('dead_anim').once('animationcomplete', () => {
+        this.enemySprite.anims.play(`${this.color}_dead_anim`).once('animationcomplete', () => {
             this.hasDied = true;
         });
 
@@ -73,19 +81,19 @@ export class Jellyfish extends MovableObjects {
 }
  
   loadAnimations() {  
-    if (!this.scene.anims.exists('aggro_swim_anim')) {
+    if (!this.scene.anims.exists(`${this.color}_aggro_swim_anim`)) {
       this.scene.anims.create({
-        key: 'aggro_swim_anim',
-        frames: this.getSpriteImages('aggro_swim', 4),
+        key: `${this.color}_aggro_swim_anim`,
+        frames: this.getSpriteImages(`${this.color}_aggro_swim`, 4),
         frameRate: Math.random() * 5,
         repeat: -1,
       });
     }
     
-    if (!this.scene.anims.exists('dead_anim')) {
+    if (!this.scene.anims.exists(`${this.color}_dead_anim`)) {
       this.scene.anims.create({
-        key: 'dead_anim',
-        frames: this.getSpriteImages('dead_animation', 4),
+        key: `${this.color}_dead_anim`,
+        frames: this.getSpriteImages(`${this.color}_dead_animation`, 4),
         frameRate: 4,
         repeat: 0,
       });

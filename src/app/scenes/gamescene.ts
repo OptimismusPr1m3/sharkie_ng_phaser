@@ -30,9 +30,9 @@ export class Gamescene extends Phaser.Scene {
       new Progressbar(this, 'potions', globalStateService, 120),
     ];
     this.enemies = [
-      new Jellyfish(this, globalStateService),
-      new Jellyfish(this, globalStateService),
-      new Jellyfish(this, globalStateService),
+      new Jellyfish(this, globalStateService, 'lila'),
+      new Jellyfish(this, globalStateService, 'yellow'),
+      new Jellyfish(this, globalStateService, 'lila'),
       new Pufferfish(this, globalStateService),
       new Pufferfish(this, globalStateService),
       new Pufferfish(this, globalStateService),
