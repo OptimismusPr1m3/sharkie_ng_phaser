@@ -1,6 +1,7 @@
 body {
     margin: 0px;
     background-color: #141414;
+    font-style: 'LGUY';
 }
 
 
@@ -10,4 +11,15 @@ body {
     flex-direction: $fd;
     align-items: $ai;
     gap: $gap;
+}
+
+
+//Custom Font
+
+@font-face {
+    font-display: swap;
+    font-family: 'LGUY';
+    src: url('/fonts/LuckiestGuy-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }

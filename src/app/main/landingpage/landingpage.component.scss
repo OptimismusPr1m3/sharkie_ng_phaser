@@ -1,0 +1,17 @@
+@use "../../../styles.scss" as styles;
+
+section {
+    width: 100%;
+    height: 100vh;
+    background-image: url('/assets/landing/sharkie_landing.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    @include styles.dFlex(column, space-between, center, 16px);
+
+    > header {
+        font-family: 'LGUY';
+        font-size: 48px;
+    }
+    
+}
