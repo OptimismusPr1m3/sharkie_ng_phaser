@@ -15,5 +15,9 @@ section {
     max-height: 1080px;
     margin: 0;
     padding: 0;
+    margin-top: 0 !important;
+    > canvas {
+      margin-top: 0 !important;
+    }
   }
 }

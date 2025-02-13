@@ -37,7 +37,7 @@ export class GameComponent {
       height: 1080,
       scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
         max: {
           width: 1920,
           height: 1080

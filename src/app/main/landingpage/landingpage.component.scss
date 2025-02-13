@@ -5,6 +5,7 @@ section {
     height: 100vh;
     background-image: url('/assets/landing/sharkie_landing.png');
     background-repeat: no-repeat;
+
     background-size: cover;
     background-position: center;
     @include styles.dFlex(column, space-between, center, 16px);
@@ -12,6 +13,19 @@ section {
     > header {
         font-family: 'LGUY';
         font-size: 48px;
+        height: 200px;
+        width: 100%;
+        @include styles.dFlex(row, center, center, 0);
+        > span {
+            color: #FF8C00;
+            font-size: 64px;
+        }
+    }
+
+    > .game-container {
+        width: 90%;
+        height: 90%;
+        border: black 1px solid;
     }
     
 }
