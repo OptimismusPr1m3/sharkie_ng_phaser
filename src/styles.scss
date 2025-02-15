@@ -1,25 +1,23 @@
 body {
-    margin: 0px;
-    background-color: #141414;
-    font-style: 'LGUY';
+  margin: 0px;
+  background-color: #141414;
+  font-family: "LGUY";
 }
-
 
 @mixin dFlex($fd: row, $jc: center, $ai: center, $gap: 0) {
-    display: flex;
-    justify-content: $jc;
-    flex-direction: $fd;
-    align-items: $ai;
-    gap: $gap;
+  display: flex;
+  justify-content: $jc;
+  flex-direction: $fd;
+  align-items: $ai;
+  gap: $gap;
 }
-
 
 //Custom Font
 
 @font-face {
-    font-display: swap;
-    font-family: 'LGUY';
-    src: url('/fonts/LuckiestGuy-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-display: swap;
+  font-family: "LGUY";
+  src: url("/fonts/LuckiestGuy-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
