@@ -1,0 +1,39 @@
+<section>
+    <!-- page 1 -->
+  <div *ngIf="isFirstPage" class="page">
+    <div class="head">
+      <div><mat-icon (click)="closeInstruction()">arrow_back</mat-icon></div>
+      <h1>Steuerung</h1>
+      <span></span>
+    </div>
+    <div class="instruction-block">
+      <app-key [isWASDBlock]="true"></app-key>
+      <p>Damit bewegst du Sharkie</p>
+    </div>
+    <div class="instruction-block">
+      <app-key [key]="'F'"></app-key>
+      <p>Sharkie's Flossenattacke (Nahkampf)</p>
+    </div>
+  </div>
+  <!-- page 2 -->
+  <div *ngIf="!isFirstPage" class="page">
+    <div class="head">
+        <div><mat-icon (click)="closeInstruction()">arrow_back</mat-icon></div>
+        <h1>Steuerung</h1>
+        <span></span>
+      </div>
+      <div class="instruction-block">
+        <app-key [isSpace]="true" [key]="'Leertaste'"></app-key>
+        <p>Sharkie schiesst eine vergiftete Blase</p>
+      </div>
+      <div class="instruction-block">
+        <app-key [key]="'G'"></app-key>
+        <p>Sharkie schiesst eine normale Blase</p>
+      </div>
+  </div>
+
+  <div class="navigation">
+    <span *ngIf="!isFirstPage" (click)="navigateTo(true)">Zurück</span>
+    <span *ngIf="isFirstPage" (click)="navigateTo(false)">Nächste Seite</span>
+  </div>
+</section>

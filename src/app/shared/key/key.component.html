@@ -1,0 +1,20 @@
+<div class="single-key" *ngIf="!isWASDBlock()" [ngClass]="isSpace() ? 'space-height' : ''">
+  <p>{{ key() }}</p>
+</div>
+
+<div class="wasd-block" *ngIf="isWASDBlock()">
+  <div class="single-key">
+    <p>W</p>
+  </div>
+  <div class="asd-cont">
+    <div class="single-key">
+      <p>A</p>
+    </div>
+    <div class="single-key">
+      <p>S</p>
+    </div>
+    <div class="single-key">
+      <p>D</p>
+    </div>
+  </div>
+</div>

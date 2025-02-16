@@ -1,3 +1,8 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
 body {
   margin: 0px;
   background-color: #141414;
@@ -11,6 +16,10 @@ body {
   align-items: $ai;
   gap: $gap;
 }
+
+$primary-color: #fcee21;
+$secondary-color: #ffffff;
+$key-color: #1B1464;
 
 //Custom Font
 

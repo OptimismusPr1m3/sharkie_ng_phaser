@@ -1,0 +1,27 @@
+@use "../../../styles.scss" as style;
+
+.single-key {
+    @include style.dFlex();
+    width: 60px;
+    height: 60px;
+    border: 3px solid style.$secondary-color ;
+    border-radius: 12px;
+    background-color: style.$primary-color ;
+    > p {
+        color: style.$key-color;
+        font-size: 24px;
+        margin: 0;
+    }
+}
+
+.wasd-block {
+    @include style.dFlex(column, center, center, 16px);
+
+    > .asd-cont {
+        @include style.dFlex(row, center, center, 16px);
+    }
+}
+
+.space-height { 
+    width: 200px;
+}

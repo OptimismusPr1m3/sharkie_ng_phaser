@@ -1,17 +1,25 @@
 <section>
-    <header>
-        <h1>The Adventure of Sharkie</h1>
-    </header>
-    <div class="game-container" [ngClass]="isPlayGamePressed ? 'gaming' : ''">
-        <div *ngIf="isChoosing" class="choseScreen">
-            <div><span (click)="openInstructions()" >Anleitung</span></div>
-            <div><span (click)="startGame()" >Start</span></div>
-        </div>
-        <app-game *ngIf="isPlayGamePressed" ></app-game>
+  <header>
+    <h1>The Adventure of Sharkie</h1>
+  </header>
+  <div
+    class="game-container"
+    [ngClass]="{
+      'gaming': isPlayGamePressed,
+      'instructions' : isInstructionsPressed,
+      '': !isPlayGamePressed && !isInstructionsPressed
+    }"
+  >
+    <div *ngIf="isChoosing" class="choseScreen">
+      <div><span (click)="openInstructions()">Steuerung</span></div>
+      <div><span (click)="startGame()">Start</span></div>
     </div>
-    <footer>
-        <a href="">Impressum</a>
-        <div><span>&#169;</span>Sebastian Wolff</div>
-        <a href="">Datenschutz</a>
-    </footer>
+    <app-instructions *ngIf="!isChoosing && !isPlayGamePressed" (isClosing)="openInstructions()"></app-instructions>
+    <app-game *ngIf="isPlayGamePressed"></app-game>
+  </div>
+  <footer>
+    <a href="">Impressum</a>
+    <div><span>&#169;</span>Sebastian Wolff</div>
+    <a href="">Datenschutz</a>
+  </footer>
 </section>
