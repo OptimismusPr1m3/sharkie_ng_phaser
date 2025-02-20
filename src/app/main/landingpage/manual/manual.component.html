@@ -1,0 +1,32 @@
+<section>
+    <!-- page 1 -->
+  <div *ngIf="isFirstPage" class="page">
+    <div class="head">
+      <div><mat-icon (click)="closeManual()">arrow_back</mat-icon></div>
+      <h1>Anleitung</h1>
+      <span></span>
+    </div>
+    <div class="instruction-block">
+    </div>
+    <div class="instruction-block">
+    </div>
+  </div>
+  <!-- page 2 -->
+  <div *ngIf="!isFirstPage" class="page">
+    <div class="head">
+        <div><mat-icon (click)="closeManual()">arrow_back</mat-icon></div>
+        <h1>Anleitung</h1>
+        <span></span>
+      </div>
+      <div class="instruction-block">
+
+      </div>
+      <div class="instruction-block">
+      </div>
+  </div>
+
+  <div class="navigation">
+    <span *ngIf="!isFirstPage" (click)="navigateTo(true)">Zurück</span>
+    <span *ngIf="isFirstPage" (click)="navigateTo(false)">Nächste Seite</span>
+  </div>
+</section>
