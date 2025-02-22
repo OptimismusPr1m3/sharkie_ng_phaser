@@ -42,5 +42,7 @@ testem.log
 .DS_Store
 Thumbs.db
 #assets
+/public/fonts/
 /public/assets/
-/public/assets/background
+/public/assets/
+/public/manual/

@@ -63,8 +63,13 @@ section {
     }
 
     .instruction-block {
-      @include style.dFlex(row, center, center);
+      @include style.dFlex(column, center, center);
       width: 100%;
+      > span {
+        @include style.dFlex(row, center, center, 8px);
+        width: 100%;
+        color: #1B1464;
+      }
       > p {
         width: 60%;
         text-align: center;
@@ -83,7 +88,7 @@ section {
   > .navigation {
     width: 100%;
     min-height: 30px;
-    @include style.dFlex(row, center, center);
+    @include style.dFlex(row, space-evenly, center);
     > span {
       font-size: 16px;
       padding: 2px;
@@ -100,7 +105,31 @@ section {
   }
 }
 
+.page-boss {
+  min-height: 355px !important;
+}
+
+.boss {
+  background-image: url('/manual/poisoned_bubb.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: -60px;
+}
+
+.puffer {
+  background-image: url('/manual/fin_slap.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: -60px;
+}
+
+.jelly {
+  background-image: url('/manual/jelly_bubb.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: -70px;
+}
+
 app-key {
-  width: 40%;
   @include style.dFlex(row, center, center);
 }

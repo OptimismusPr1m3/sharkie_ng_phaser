@@ -2,8 +2,8 @@
 
 .single-key {
     @include style.dFlex();
-    width: 60px;
-    height: 60px;
+    // width: 60px;
+    // height: 60px;
     border: 3px solid style.$secondary-color ;
     border-radius: 12px;
     background-color: style.$primary-color ;
@@ -23,5 +23,5 @@
 }
 
 .space-height { 
-    width: 200px;
+    width: 200px !important;
 }

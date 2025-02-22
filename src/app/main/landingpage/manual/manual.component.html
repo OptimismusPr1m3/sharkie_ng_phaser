@@ -1,6 +1,10 @@
-<section>
+<section [ngClass]="{
+  'puffer': navigatedSite == 0, 
+  'jelly': navigatedSite == 1,
+  'boss': navigatedSite == 2
+}">
     <!-- page 1 -->
-  <div *ngIf="isFirstPage" class="page">
+  <div *ngIf="navigatedSite == 0" class="page">
     <div class="head">
       <div><mat-icon (click)="closeManual()">arrow_back</mat-icon></div>
       <h1>Anleitung</h1>
@@ -9,24 +13,42 @@
     <div class="instruction-block">
     </div>
     <div class="instruction-block">
+      <span> Sharkie führt mit<app-key [key]="'F'" [keyHeight]="28" [keyWidth]="28"></app-key>einen Flossenschlag aus (Nahkampf) </span>
+      <span>Damit kannst du die Kugelfische besiegen</span>
     </div>
   </div>
   <!-- page 2 -->
-  <div *ngIf="!isFirstPage" class="page">
+  <div *ngIf="navigatedSite == 1 " class="page">
     <div class="head">
         <div><mat-icon (click)="closeManual()">arrow_back</mat-icon></div>
         <h1>Anleitung</h1>
         <span></span>
       </div>
       <div class="instruction-block">
-
       </div>
       <div class="instruction-block">
+        <span> Besiege die Tintenfische mit der<app-key [key]="'G'" [keyHeight]="28" [keyWidth]="28"></app-key>Blasenattacke (Fernkampf) </span>
+      <span>Gegen andere Gegner ist diese Attacke wirkungslos</span>
+      </div>
+  </div>
+
+  <!-- page 3 -->
+  <div *ngIf="navigatedSite == 2" class="page page-boss">
+    <div class="head">
+        <div><mat-icon (click)="closeManual()">arrow_back</mat-icon></div>
+        <h1>Anleitung</h1>
+        <span></span>
+      </div>
+      <div class="instruction-block">
+      </div>
+      <div class="instruction-block">
+        <span> Der finale Endgegner kann nur mit der<app-key [key]="'SPACE'" [keyHeight]="28" [keyWidth]="128"></app-key>vergifteten</span>
+        <span> Blasenattacke besiegt werden. Sharkie benötigt dafür Tränke</span>
       </div>
   </div>
 
   <div class="navigation">
-    <span *ngIf="!isFirstPage" (click)="navigateTo(true)">Zurück</span>
-    <span *ngIf="isFirstPage" (click)="navigateTo(false)">Nächste Seite</span>
+    <span *ngIf="navigatedSite > 0" (click)="navigateSite(-1)">Zurück</span>
+    <span *ngIf="navigatedSite < 2" (click)="navigateSite(1)">Nächste Seite</span>
   </div>
 </section>

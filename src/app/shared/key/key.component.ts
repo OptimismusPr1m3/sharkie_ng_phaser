@@ -12,4 +12,8 @@ export class KeyComponent {
   key = input<string>();
   isSpace = input<boolean>(false);
   isWASDBlock = input<boolean>(false);
+
+  keyHeight = input<number>(60);
+  keyWidth = input<number>(60);
+
 }

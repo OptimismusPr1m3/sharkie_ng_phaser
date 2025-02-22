@@ -11,9 +11,9 @@
     }"
   >
     <div *ngIf="isChoosing" class="choseScreen">
-      <div><span (click)="openManual()">Anleitung</span></div>
-      <div><span (click)="openInstructions()">Steuerung</span></div>
-      <div><span (click)="startGame()">Start</span></div>
+      <div (click)="openManual()"><span >Anleitung</span></div>
+      <div (click)="openInstructions()"><span >Steuerung</span></div>
+      <div (click)="startGame()"><span >Start</span></div>
     </div>
     <app-instructions *ngIf="!isChoosing && !isPlayGamePressed && !isManual" (isClosing)="openInstructions()"></app-instructions>
     <app-manual *ngIf="!isChoosing && !isPlayGamePressed && isManual" (isClosing)="openManual()"></app-manual>

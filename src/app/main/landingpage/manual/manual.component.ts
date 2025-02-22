@@ -5,23 +5,21 @@ import { KeyComponent } from '../../../shared/key/key.component';
 
 @Component({
   selector: 'app-manual',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, KeyComponent],
   templateUrl: './manual.component.html',
   styleUrl: './manual.component.scss'
 })
 export class ManualComponent {
 
     isClosing = output();
-    isFirstPage: boolean = true;
+    navigatedSite: number = 0;
   
     closeManual() {
       this.isClosing.emit()
     }
-  
-    navigateTo(isFirstPage: boolean){
-      this.isFirstPage = isFirstPage ? true : false
-      console.log(this.isFirstPage)
-    }
 
+    navigateSite(direction: number) {
+      this.navigatedSite += direction;
+    }
 }
 
