@@ -15,5 +15,40 @@ section {
     margin: 0;
     padding: 0;
     border-radius: 14px !important;
+    overflow: hidden;
+    > canvas {
+      border-radius: 14px !important;
+    }
+    > .right-corner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 50px;
+      @include styles.dFlex(row, center, center, 16px);
+      box-sizing: border-box;
+      > span {
+        @include styles.dFlex(row, center, center);
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        &:hover {
+          cursor: pointer;
+          border: 2px solid styles.$key-color;
+      }
+    }  
   }
+
+}
+
+mat-icon {
+  align-items: center;
+  font-size: 34px;
+  color: styles.$key-color;
+  height: 34px;
+  width: 34px;
+}
+
+
 }

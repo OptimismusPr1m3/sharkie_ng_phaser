@@ -1,7 +1,18 @@
 <section>
-  <div
-    class="phaser-frame"
-    #phaserFrame
-  ></div>
-
+  <div class="phaser-frame" #phaserFrame>
+    <div class="right-corner">
+      <span *ngIf="isMuted" (click)="handleAudio()"><mat-icon>volume_off</mat-icon></span>
+      <span *ngIf="!isMuted" (click)="handleAudio()"><mat-icon>volume_up</mat-icon></span>
+      <!-- <span (click)="handleFullScreen()"><mat-icon>open_in_full</mat-icon></span> -->
+    </div>
+  </div>
 </section>
+
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.4)"
+  size="medium"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Das Spiel wird geladen..</p></ngx-spinner
+>

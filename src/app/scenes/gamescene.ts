@@ -101,6 +101,7 @@ export class Gamescene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, 1920 * 2, 1080);
 
     this.setupCollider();
+    this.sys.game.events.emit('scene-booted');
   }
 
   setupCollider() {
