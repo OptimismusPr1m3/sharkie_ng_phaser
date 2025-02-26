@@ -18,6 +18,7 @@ export class Gamescene extends Phaser.Scene {
   private enemiesGroup!: Phaser.Physics.Arcade.Group;
   private objectsGroup!: Phaser.Physics.Arcade.Group;
   private progressBars: Progressbar[] = [];
+  private fpsText!: Phaser.GameObjects.Text;
 
   constructor(public globalStateService: GlobalstateserviceService) {
     super({ key: 'Gamescene' });
@@ -87,9 +88,8 @@ export class Gamescene extends Phaser.Scene {
     this.createObjects(this.progressBars);
     this.setupPhysicsGroups();
 
-    
     this.player.create();
-    this.boss.create()
+    this.boss.create();
 
     this.cameras.main.startFollow(
       this.player.playerSprite,
@@ -101,6 +101,10 @@ export class Gamescene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, 1920 * 2, 1080);
 
     this.setupCollider();
+    this.fpsText = this.add
+      .text(1920 / 2, 20, '', { fontSize: '24px', color: '#D6195E', fontFamily: 'LGUY' })
+      .setScrollFactor(0);
+    this.fpsText.setVisible(false);
     this.sys.game.events.emit('scene-booted');
   }
 
@@ -124,10 +128,11 @@ export class Gamescene extends Phaser.Scene {
     this.physics.add.overlap(
       this.boss.bossSprite,
       this.player.playerSprite,
-      this.handlePlayerBossCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this
+        .handlePlayerBossCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
-    )
+    );
   }
 
   handlePlayerEnemyCollision(
@@ -135,7 +140,7 @@ export class Gamescene extends Phaser.Scene {
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody // kann eigentlich geloescht werden
   ) {
     if (this.player.damageCooldown) return;
-    console.log('Kollision mit einem Gegner!'); 
+    console.log('Kollision mit einem Gegner!');
     this.player.hasBeenHit(-1);
   }
 
@@ -200,6 +205,16 @@ export class Gamescene extends Phaser.Scene {
     this.boss.update(this.player.playerSprite);
     this.garbageCollection();
     this.calculateBossDistance();
+    this.checkFPSToggle();
+  }
+
+  checkFPSToggle() {
+    if (this.globalStateService.isShowingFPS()) {
+      this.fpsText.setVisible(true);
+      this.fpsText.setText('FPS: ' + this.game.loop.actualFps.toFixed(0));
+    } else {
+      this.fpsText.setVisible(false);
+    }
   }
 
   checkCollisions(objects: any) {
@@ -244,12 +259,12 @@ export class Gamescene extends Phaser.Scene {
   poisonedBubbleCollisionCheck() {
     const bubbles = this.player.getPBubbles();
     bubbles.forEach((bubble) => {
-        if (this.physics.overlap(bubble, this.boss.bossSprite)) {
-          this.globalStateService.removePBubble(bubble);
-          bubble.destroy();
-          this.boss.healthPoints -= 25;
-          this.boss.isHurted = true;
-        }
+      if (this.physics.overlap(bubble, this.boss.bossSprite)) {
+        this.globalStateService.removePBubble(bubble);
+        bubble.destroy();
+        this.boss.healthPoints -= 25;
+        this.boss.isHurted = true;
+      }
     });
   }
 
@@ -265,7 +280,6 @@ export class Gamescene extends Phaser.Scene {
     if (distance < 1120 && !this.boss.hasSpawned) {
       this.boss.isSpawning = true;
     }
-
   }
 
   whiteBubbleCollisionCheck() {
@@ -295,7 +309,7 @@ export class Gamescene extends Phaser.Scene {
           enemy.isDead = true;
           enemy.checkDeathState();
         }
-      })
+      });
     });
   }
 }

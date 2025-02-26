@@ -36,19 +36,32 @@ section {
         &:hover {
           cursor: pointer;
           border: 2px solid styles.$key-color;
+        }
       }
-    }  
+    }
   }
 
+  mat-icon {
+    align-items: center;
+    font-size: 34px;
+    color: styles.$key-color;
+    height: 34px;
+    width: 34px;
+  }
 }
 
-mat-icon {
-  align-items: center;
-  font-size: 34px;
-  color: styles.$key-color;
-  height: 34px;
-  width: 34px;
-}
-
-
+.overlay { 
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  @include styles.dFlex(row, center, center);
+  > div {
+    width: auto;
+    height: auto;
+    max-width: 1920px;
+  }
 }

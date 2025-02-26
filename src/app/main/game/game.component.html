@@ -1,12 +1,23 @@
 <section>
   <div class="phaser-frame" #phaserFrame>
     <div class="right-corner">
-      <span *ngIf="isMuted" (click)="handleAudio()"><mat-icon>volume_off</mat-icon></span>
-      <span *ngIf="!isMuted" (click)="handleAudio()"><mat-icon>volume_up</mat-icon></span>
+      <span *ngIf="isMuted" (click)="handleAudio()"><mat-icon fontSet="material-symbols-outlined">volume_off</mat-icon></span>
+      <span *ngIf="!isMuted" (click)="handleAudio()"><mat-icon fontSet="material-symbols-outlined">volume_up</mat-icon></span>
       <!-- <span (click)="handleFullScreen()"><mat-icon>open_in_full</mat-icon></span> -->
+      <span (click)="openControls()"><mat-icon fontSet="material-symbols-outlined">info</mat-icon></span>
+      <span (click)="openSettings()"><mat-icon fontSet="material-symbols-outlined">settings</mat-icon></span>
     </div>
   </div>
 </section>
+
+<div class="overlay" *ngIf="isOverlayOpen">
+  <div *ngIf="isControlsOpen">
+    <app-instructions (isClosing)="isClosing()"></app-instructions>
+  </div>
+  <div *ngIf="isSettingsOpen">
+    <app-settings (isClosing)="isClosing()"></app-settings>
+  </div>
+</div>
 
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.4)"

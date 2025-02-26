@@ -1,0 +1,94 @@
+@use "../../../../styles.scss" as style;
+
+section {
+  padding: 16px;
+  width: 600px;
+  height: 400px;
+  @include style.dFlex(column, space-between, center, 16px);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.055),
+    rgba(255, 255, 255, 0.3)
+  );
+  border: style.$primary-color 3px solid;
+  border-radius: 14px;
+  > .page {
+    width: 100%;
+    min-height: 320px;
+    @include style.dFlex(column, space-between, center, 16px);
+
+    > .head {
+      width: 100%;
+      @include style.dFlex(row, flex-start, center, 64px);
+      > h1 {
+        text-align: center;
+        width: 80%;
+        font-size: 48px;
+        background: linear-gradient(
+          style.$primary-color,
+          style.$secondary-color
+        );
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+      }
+      > span {
+        width: 10%;
+        height: 60px;
+      }
+      > div {
+        @include style.dFlex(row, center, center);
+        height: 60px;
+        width: 10%;
+        > mat-icon {
+          border-radius: 50%;
+          padding: 4px;
+          font-size: 32px;
+          height: 32px;
+          width: 32px;
+          background: linear-gradient(
+            style.$primary-color,
+            style.$secondary-color
+          );
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          &:hover {
+            border: 2px solid style.$primary-color;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .settings-container {
+        width: 100%;
+        @include style.dFlex(column, center, center, 16px);
+      > .instruction-block {
+        @include style.dFlex(row, center, center);
+        width: 100%;
+        height: 60px;
+        > span {
+          @include style.dFlex(row, center, center);
+          box-sizing: border-box;
+          width: 60%;
+          text-align: center;
+          font-size: 24px;
+          padding: 6px;
+          background: linear-gradient(
+            style.$primary-color,
+            style.$secondary-color
+          );
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          &:hover {
+            cursor: pointer;
+            border: 2px solid style.$primary-color;
+            border-radius: 14px;
+          }
+        }
+      }
+    }
+  }
+}

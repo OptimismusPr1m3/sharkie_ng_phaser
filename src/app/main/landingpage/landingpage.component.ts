@@ -3,10 +3,11 @@ import { GameComponent } from "../game/game.component";
 import { CommonModule } from '@angular/common';
 import { InstructionsComponent } from "./instructions/instructions.component";
 import { ManualComponent } from "./manual/manual.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-landingpage',
-  imports: [GameComponent, CommonModule, InstructionsComponent, ManualComponent],
+  imports: [GameComponent, CommonModule, InstructionsComponent, ManualComponent, RouterLink],
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss'
 })

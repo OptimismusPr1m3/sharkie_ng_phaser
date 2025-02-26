@@ -16,6 +16,8 @@ export class GlobalstateserviceService {
   currentCoins = signal<number>(1);
   currentHealth = signal<number>(6);
 
+  isShowingFPS = signal<boolean>(false);
+
   constructor() {}
 
   getPBubbles() {

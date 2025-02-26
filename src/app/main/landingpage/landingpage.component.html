@@ -20,8 +20,8 @@
     <app-game *ngIf="isPlayGamePressed"></app-game>
   </div>
   <footer>
-    <a href="">Impressum</a>
+    <a [routerLink]="['/imprint']">Impressum</a>
     <div><span>&#169;</span>Sebastian Wolff</div>
-    <a href="">Datenschutz</a>
+    <a [routerLink]="['/policy']">Datenschutz</a>
   </footer>
 </section>

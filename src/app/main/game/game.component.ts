@@ -5,10 +5,12 @@ import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 import { GlobalstateserviceService } from '../../services/globalstate.service';
 import { PhaserConfigService } from '../../services/phaser-config.service';
 import { MatIconModule } from '@angular/material/icon';
+import { InstructionsComponent } from '../landingpage/instructions/instructions.component';
+import { SettingsComponent } from "../landingpage/settings/settings.component";
 
 @Component({
   selector: 'app-game',
-  imports: [CommonModule, NgxSpinnerComponent, MatIconModule],
+  imports: [CommonModule, NgxSpinnerComponent, MatIconModule, InstructionsComponent, SettingsComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
@@ -19,6 +21,10 @@ export class GameComponent {
   game: Phaser.Game | undefined;
   isOverFHD: boolean = true;
   isMuted: boolean = false;
+  isOverlayOpen: boolean = false;
+
+  isControlsOpen: boolean = false;
+  isSettingsOpen: boolean = false;
 
   // @HostListener('window:resize', ['$event'])
   // onResize() {
@@ -63,6 +69,25 @@ export class GameComponent {
     if (this.game) {
       //this.game.sound.mute = this.isMuted;
     }
+  }
+
+  isClosing() {
+    this.isOverlayOpen = false;
+    this.isControlsOpen = false;
+    this.isSettingsOpen = false;
+    this.game?.scene.resume('Gamescene');
+  }
+
+  openControls() {
+    this.game?.scene.pause('Gamescene');
+    this.isOverlayOpen = !this.isOverlayOpen;
+    this.isControlsOpen = !this.isControlsOpen;
+  }
+
+  openSettings() {
+    this.game?.scene.pause('Gamescene');
+    this.isOverlayOpen = !this.isOverlayOpen;
+    this.isSettingsOpen = !this.isSettingsOpen;
   }
 
   // handleFullScreen() {
