@@ -74,13 +74,14 @@ export class Player extends MovableObjects {
     //DEATH ANIMATIONS
     this.loadImages(12, 'poisoned_death_anim', 'assets/sharkie/dead/poisoned/');
     this.loadImages(10, 'shock_death_anim', 'assets/sharkie/dead/shock/');
-    this.keyboardInput.initializeInputs();
     this.throwable_pois.preload();
     this.throwable_white.preload();
     this.slapBox.preload();
   }
 
   create() {
+    console.log(this.scene.plugins.plugins);
+    this.keyboardInput.initializeInputs();
     this.playerSprite = this.scene.physics.add
       .sprite(200, 1080 / 1.7, 'idle_anim1')
       .setScale(0.4);
@@ -92,7 +93,11 @@ export class Player extends MovableObjects {
   }
 
   update() {
-    this.manageInputs();
+    if (this.scene.sys.game.device.os.desktop) {
+      this.manageInputs();
+    } else {
+      this.manageMobileInputs();
+    }
   }
 
   manageInputs() {
@@ -114,6 +119,24 @@ export class Player extends MovableObjects {
       !this.isHit
     ) {
       this.manageAttacks(keys);
+      this.isLongIdle = false;
+      this.lastInputTime = this.scene.time.now;
+    } else if (
+      this.scene.time.now - this.lastInputTime > this.idleThreshold &&
+      !this.isHit
+    ) {
+      this.manageLongIdle();
+    } else if (!this.isHit) {
+      this.idle(this.playerSprite, 'idle');
+    }
+  }
+
+  manageMobileInputs() {
+    const joystick = this.keyboardInput.getJoystick();
+    if (this.isAttacking) return;
+
+    if ((joystick.left || joystick.right || joystick.up || joystick.down) && !this.isHit) {
+      this.manageMobileMovement(joystick);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
@@ -165,6 +188,20 @@ export class Player extends MovableObjects {
     } else if (keys.up?.isDown) {
       this.moveY(this.playerSprite, -this.speed, 'swim');
     } else if (keys.down?.isDown) {
+      this.moveY(this.playerSprite, this.speed, 'swim');
+    }
+  }
+
+  manageMobileMovement(joystick: any) {
+    if (this.isAttacking) return;
+
+    if (joystick.left) {
+      this.moveX(this.playerSprite, -this.speed, 'swim', true);
+    } else if (joystick.right) {
+      this.moveX(this.playerSprite, this.speed, 'swim', false);
+    } else if (joystick.up) {
+      this.moveY(this.playerSprite, -this.speed, 'swim');
+    } else if (joystick.down) {
       this.moveY(this.playerSprite, this.speed, 'swim');
     }
   }

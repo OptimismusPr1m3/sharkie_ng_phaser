@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Phaser from 'phaser';
 import { GlobalstateserviceService } from './globalstate.service';
 import { Gamescene } from '../scenes/gamescene';
+import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,15 @@ export class PhaserConfigService {
           arcade: {
             debug: true,
           },
+        },
+        plugins: {
+          global: [
+            {
+              key: 'rexVirtualJoystick',
+              plugin: VirtualJoystickPlugin,
+              mapping: 'rexVirtualJoystick',
+            },
+          ],
         },
         parent: null,
         scene: [new Gamescene(this.globalStateService)],
