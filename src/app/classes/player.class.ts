@@ -132,11 +132,17 @@ export class Player extends MovableObjects {
   }
 
   manageMobileInputs() {
+    const keys = this.keyboardInput.getCursorKeys();
     const joystick = this.keyboardInput.getJoystick();
     if (this.isAttacking) return;
 
     if ((joystick.left || joystick.right || joystick.up || joystick.down) && !this.isHit) {
       this.manageMobileMovement(joystick);
+      this.isLongIdle = false;
+      this.lastInputTime = this.scene.time.now;
+    } else if ((keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
+    !this.isHit) {
+      this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
