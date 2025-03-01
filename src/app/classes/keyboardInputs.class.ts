@@ -32,57 +32,58 @@ export class KeyboardInputs {
       x: 150,
       y: this.scene.scale.height - 150,
       radius: 80,
-      base: this.scene.add.circle(0, 0, 100, 0x888888),
-      thumb: this.scene.add.circle(0, 0, 50, 0xcccccc),
+      base: this.scene.add.circle(0, 0, 100, 0x444444),
+      thumb: this.scene.add.circle(0, 0, 50, 0xf8edf9),
     });
     if (this.scene.sys.game.device.os.desktop) {
       this.joystick.base.setAlpha(0.0);
       this.joystick.thumb.setAlpha(0.0);
     } else {
-      this.joystick.base.setAlpha(0.5);
-      this.joystick.thumb.setAlpha(0.5);
+      this.joystick.base.setAlpha(0.6);
+      this.joystick.thumb.setAlpha(0.8);
     }
   }
 
   initializeMobileInputs() {
-    const buttonConfig = {
+    this.createButton(this.scene.scale.width - 275, this.scene.scale.height - 175, 'Slap', this.keys.slap); // FIND SLAP
+    this.createButton(this.scene.scale.width - 325, this.scene.scale.height - 100, 'Bubble', this.keys.w_bubble);
+    this.createButton(this.scene.scale.width - 200, this.scene.scale.height - 100, 'Poison', this.keys.space)
+  }
+  createButton(x: number, y: number, text: string, key: Phaser.Input.Keyboard.Key) {
+    const buttonWidth = 120, buttonHeight = 55, borderRadius = 20;
+    const buttonBackground = this.scene.add.graphics();
+    this.updateButtonBackground(buttonBackground, 0x444444, buttonWidth, buttonHeight, borderRadius);
+  
+    const buttonText = this.scene.add.text(0, 0, text, {
       fontSize: '28px',
       fontFamily: 'LGUY',
       color: '#ffffff',
-      backgroundColor: '#444444',
-      padding: { x: 5, y: 5 },
-      fixedWidth: 110,
-      fixedHeight: 40,
-      align: 'center',
-    };
-
-    this.createButton(this.scene.scale.width - 450, this.scene.scale.height - 150, 'Slap', buttonConfig, this.keys.slap);
+      align: 'center'
+    }).setOrigin(0.5);
   
-    this.createButton(this.scene.scale.width - 325, this.scene.scale.height - 150, 'Bubble', buttonConfig, this.keys.w_bubble);
-
-    this.createButton(this.scene.scale.width - 200, this.scene.scale.height - 150, 'Poison', buttonConfig, this.keys.space)
-  }
-
-  createButton(x: number, y: number, text: string, style: any, key: Phaser.Input.Keyboard.Key) {
-    const button = this.scene.add.text(x, y, text, style)
-      .setOrigin(0.5)
+    const buttonContainer = this.scene.add.container(x, y, [buttonBackground, buttonText])
+      .setSize(buttonWidth, buttonHeight)
+      .setInteractive()
       .setScrollFactor(0)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => {
-        (key as any).isDown = true;
-        button.setBackgroundColor('#666666'); 
-      })
-      .on('pointerup', () => {
-        (key as any).isDown = false;
-        button.setBackgroundColor('#444444'); 
-      });
+      .setAlpha(this.scene.sys.game.device.os.desktop ? 0 : 0.8);
   
-    if (this.scene.sys.game.device.os.desktop) {
-      button.setAlpha(0); 
-    } else {
-      button.setAlpha(0.8);
-    }
+    buttonContainer.on('pointerdown', () => {
+      (key as any).isDown = true;
+      this.updateButtonBackground(buttonBackground, 0x666666, buttonWidth, buttonHeight, borderRadius);
+    });
+  
+    buttonContainer.on('pointerup', () => {
+      (key as any).isDown = false;
+      this.updateButtonBackground(buttonBackground, 0x444444, buttonWidth, buttonHeight, borderRadius);
+    });
   }
+  
+  updateButtonBackground(graphics: Phaser.GameObjects.Graphics, color: number, width: number, height: number, radius: number) {
+    graphics.clear();
+    graphics.fillStyle(color, 1);
+    graphics.fillRoundedRect(-width / 2, -height / 2, width, height, radius);
+  }
+  
 
 
   getCursorKeys(): CustomKeys {
