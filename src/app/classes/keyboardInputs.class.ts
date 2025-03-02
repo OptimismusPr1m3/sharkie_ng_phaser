@@ -36,9 +36,12 @@ export class KeyboardInputs {
       thumb: this.scene.add.circle(0, 0, 50, 0xf8edf9),
     });
     if (this.scene.sys.game.device.os.desktop) {
+      console.log('is Desktop');
+      console.log('is Desktop', this.scene.sys.game.device);
       this.joystick.base.setAlpha(0.0);
       this.joystick.thumb.setAlpha(0.0);
     } else {
+      console.log('is Mobile');
       this.joystick.base.setAlpha(0.6);
       this.joystick.thumb.setAlpha(0.8);
     }

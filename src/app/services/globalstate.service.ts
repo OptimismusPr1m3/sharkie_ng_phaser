@@ -17,6 +17,7 @@ export class GlobalstateserviceService {
   currentHealth = signal<number>(6);
 
   isShowingFPS = signal<boolean>(false);
+  isShowingHitboxes = signal<boolean>(false);
 
   constructor() {}
 

@@ -19,6 +19,7 @@ export class Gamescene extends Phaser.Scene {
   private objectsGroup!: Phaser.Physics.Arcade.Group;
   private progressBars: Progressbar[] = [];
   private fpsText!: Phaser.GameObjects.Text;
+  private debugGraphics: Phaser.GameObjects.Graphics | null = null;
 
   constructor(public globalStateService: GlobalstateserviceService) {
     super({ key: 'Gamescene' });
@@ -206,6 +207,22 @@ export class Gamescene extends Phaser.Scene {
     this.garbageCollection();
     this.calculateBossDistance();
     this.checkFPSToggle();
+    this.checkHitboxToggle();
+  }
+
+  checkHitboxToggle() {
+    if (this.globalStateService.isShowingHitboxes()) {
+      if (!this.debugGraphics) { 
+        this.physics.world.drawDebug = true;
+        this.debugGraphics = this.physics.world.createDebugGraphic();
+      }
+    } else {
+      if (this.debugGraphics) {
+        this.debugGraphics.destroy();
+        this.debugGraphics = null;
+        this.physics.world.drawDebug = false;
+      }
+    }
   }
 
   checkFPSToggle() {

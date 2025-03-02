@@ -26,7 +26,10 @@ export class PhaserConfigService {
         physics: {
           default: 'arcade',
           arcade: {
-            debug: true,
+            debug: false,
+            debugShowBody: true,
+            debugShowStaticBody: true,
+            debugShowVelocity: true
           },
         },
         plugins: {

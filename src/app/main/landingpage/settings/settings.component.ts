@@ -29,4 +29,10 @@ export class SettingsComponent {
     window.location.reload();
   }
 
+  toggleHitboxes() {
+    console.log('toggle hitboxes');
+    this.globalStateService.isShowingHitboxes.set(!this.globalStateService.isShowingHitboxes());
+    this.close();
+  }
+
 }

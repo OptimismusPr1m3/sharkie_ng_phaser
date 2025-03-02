@@ -40,7 +40,12 @@ export class Player extends MovableObjects {
       'assets/sharkie/attack/bubble_trap/white_bubble.png',
       globalStateService
     );
-    this.slapBox = new Throwable(scene, 'slap_box', 'assets/sharkie/attack/bubble_trap/white_bubble.png', globalStateService);
+    this.slapBox = new Throwable(
+      scene,
+      'slap_box',
+      'assets/sharkie/attack/bubble_trap/white_bubble.png',
+      globalStateService
+    );
   }
 
   preload() {
@@ -136,12 +141,17 @@ export class Player extends MovableObjects {
     const joystick = this.keyboardInput.getJoystick();
     if (this.isAttacking) return;
 
-    if ((joystick.left || joystick.right || joystick.up || joystick.down) && !this.isHit) {
+    if (
+      (joystick.left || joystick.right || joystick.up || joystick.down) &&
+      !this.isHit
+    ) {
       this.manageMobileMovement(joystick);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if ((keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
-    !this.isHit) {
+    } else if (
+      (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
+      !this.isHit
+    ) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
@@ -215,10 +225,18 @@ export class Player extends MovableObjects {
   manageAttacks(keys: CustomKeys) {
     if (this.isAttacking) return;
 
-    if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() > 1) {
+    if (
+      keys.space?.isDown &&
+      !this.attackKeyPressed &&
+      this.globalStateService.currentPotions() > 1
+    ) {
       this.attackKeyPressed = true;
       this.bubbleAttack(this.playerSprite, 'green_bubble_trap', true);
-    } else if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() == 1) {
+    } else if (
+      keys.space?.isDown &&
+      !this.attackKeyPressed &&
+      this.globalStateService.currentPotions() == 1
+    ) {
       this.attackKeyPressed = true;
       this.noBubbleAttack(this.playerSprite, 'no_bubble_trap');
     } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
@@ -249,7 +267,10 @@ export class Player extends MovableObjects {
     });
   }
 
-  noBubbleAttack(sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, animation: string) {
+  noBubbleAttack(
+    sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+    animation: string
+  ) {
     if (this.isAttacking) return;
     sprite.setVelocity(0);
     this.isAttacking = true;
