@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { GameComponent } from "../game/game.component";
 import { CommonModule } from '@angular/common';
 import { InstructionsComponent } from "./instructions/instructions.component";
 import { ManualComponent } from "./manual/manual.component";
 import { RouterLink } from '@angular/router';
+import { GlobalstateserviceService } from '../../services/globalstate.service';
 
 @Component({
   selector: 'app-landingpage',
@@ -17,6 +18,27 @@ export class LandingpageComponent {
   isInstructionsPressed: boolean = false;
   isManual: boolean = false
   isChoosing: boolean = true;
+  currentHeight!: number;
+  isInvis: boolean = false;
+
+  constructor(public globalStateService: GlobalstateserviceService) { 
+    this.currentHeight = window.innerHeight;
+    this.checkInvis(window.innerHeight);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.currentHeight = event.target.innerHeight;
+    this.checkInvis(event.target.innerHeight);
+  }
+
+  checkInvis(height: number) {
+    if (height < 1080) {
+      this.isInvis = true;
+    } else {
+      this.isInvis = false;
+    }
+  }
 
   startGame() {
     this.isChoosing = !this.isChoosing

@@ -20,8 +20,7 @@ export class PhaserConfigService {
         height: 1080,
         scale: {
           mode: Phaser.Scale.FIT,
-          autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
-
+          autoCenter: Phaser.Scale.CENTER_BOTH,
         },
         physics: {
           default: 'arcade',
@@ -29,7 +28,7 @@ export class PhaserConfigService {
             debug: false,
             debugShowBody: true,
             debugShowStaticBody: true,
-            debugShowVelocity: true
+            debugShowVelocity: true,
           },
         },
         plugins: {
@@ -51,4 +50,12 @@ export class PhaserConfigService {
     return this.phaserConfig;
   }
 
+  toggleFullScreen(game: Phaser.Game) {
+    if (game.scale.isFullscreen) {
+      game.scale.stopFullscreen();
+    } else {
+      game.scale.startFullscreen();
+    }
+  }
+  
 }

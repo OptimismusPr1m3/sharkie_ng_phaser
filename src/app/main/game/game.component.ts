@@ -26,10 +26,13 @@ export class GameComponent {
   isControlsOpen: boolean = false;
   isSettingsOpen: boolean = false;
 
-  // @HostListener('window:resize', ['$event'])
-  // onResize() {
-  //   this.resizeGame();
-  // }
+  @HostListener('document:fullscreenchange', ['$event'])
+  onFullScreenChange() {
+    if (this.game) {
+      //const parent = this.phaserFrameElement.nativeElement;
+      this.game.scale.refresh();
+    }
+  }
 
   // @HostListener('document:fullscreenchange', ['$event'])
   // onFullScreenChange() {
@@ -90,29 +93,18 @@ export class GameComponent {
     this.isSettingsOpen = !this.isSettingsOpen;
   }
 
-  // handleFullScreen() {
-  //   if (!this.game) return;
-
-  //   if (this.game.scale.isFullscreen) {
-  //     this.game.scale.stopFullscreen();
-  //     this.game.scale.resize(1920, 1080);
-  //   } else {
-  //     this.game.scale.startFullscreen();
-  //     setTimeout(() => {
-  //       // Warte kurz, damit Phaser Zeit hat, sich anzupassen
-  //       this.resizeGame();
-  //     }, 100);
-  //   }
-  // }
-
-  // resizeGame() {
-  //   if (!this.game) return;
-
-  //   const width = window.innerWidth;
-  //   const height = window.innerHeight;
-
-  //   this.game.scale.resize(width, height);
-  //   this.game.canvas.style.width = `${width}px`;
-  //   this.game.canvas.style.height = `${height}px`;
-  // }
+  handleFullScreen() {
+    if (this.phaserFrameElement) {
+      const element = this.phaserFrameElement.nativeElement;
+      if (!document.fullscreenElement) {
+        element.requestFullscreen().catch(err => {
+          console.error('Fehler beim Aktivieren des Fullscreen-Modus:', err);
+        });
+      } else {
+        document.exitFullscreen().catch(err => {
+          console.error('Fehler beim Verlassen des Fullscreen-Modus:', err);
+        });
+      }
+    }
+  }
 }
