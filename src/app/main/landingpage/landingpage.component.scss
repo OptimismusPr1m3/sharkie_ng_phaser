@@ -80,6 +80,9 @@ section {
     background-color: $primary-color;
     border-radius: 16px;
     padding: 4px 4px;
+    @media (max-height: 1080px) {
+      margin-top: 24px;
+    }
   }
 
   > footer {
@@ -123,4 +126,28 @@ section {
     rgba(255, 255, 255, 0.055),
     rgba(255, 255, 255, 0.3)
   );
+}
+
+
+.rotate-device {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); // Halbtransparenter Hintergrund
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Über allem anderen
+}
+
+.rotate-device p {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  background: #ff4444; // Roter Hinweis
+  border-radius: 10px;
 }

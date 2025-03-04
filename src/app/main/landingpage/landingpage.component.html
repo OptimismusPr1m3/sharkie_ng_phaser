@@ -25,3 +25,7 @@
     <a [routerLink]="['/policy']">Datenschutz</a>
   </footer>
 </section>
+
+<div class="rotate-device" *ngIf="isMobilePortrait" [@fadeInOut]>
+  <p>Hey, rotate your device!</p>
+</div>
