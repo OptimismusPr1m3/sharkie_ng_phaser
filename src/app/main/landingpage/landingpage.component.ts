@@ -5,7 +5,13 @@ import { InstructionsComponent } from './instructions/instructions.component';
 import { ManualComponent } from './manual/manual.component';
 import { RouterLink } from '@angular/router';
 import { GlobalstateserviceService } from '../../services/globalstate.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+} from '@angular/animations';
 @Component({
   selector: 'app-landingpage',
   imports: [
@@ -18,16 +24,15 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss',
   animations: [
-    trigger('fadeInOut', [
-      state('in', style({ opacity: 1 })),
-      state('out', style({ opacity: 0 })),
+    trigger('rotate', [
+      state('zero', style({ transform: 'rotate(0deg)' })),
+      state('ninety', style({ transform: 'rotate(90deg)' })),
       transition(':enter', [
-        style({ opacity: 0 }),
-        animate('500ms ease-in', style({ opacity: 1 })),
+        style({ transform: 'rotate(0deg)' }),
+        animate('500ms ease-in-out', style({ transform: 'rotate(90deg)' })),
+        animate('500ms ease-in-out', style({ transform: 'rotate(0deg)' })),
       ]),
-      transition(':leave', [
-        animate('500ms ease-out', style({ opacity: 0})),
-      ]),
+      transition('zero <=> ninety', [animate('500ms ease-in-out')]),
     ]),
   ],
 })
@@ -40,11 +45,13 @@ export class LandingpageComponent {
   isInvis: boolean = false;
   minWidth: number = 768;
   isMobilePortrait: boolean = false;
+  rotationState: string = 'zero';
 
   constructor(public globalStateService: GlobalstateserviceService) {
     this.currentHeight = window.innerHeight;
     this.checkInvis(window.innerHeight);
     this.checkScreenSize(window.innerWidth, window.innerHeight);
+    this.startRotation();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -52,6 +59,12 @@ export class LandingpageComponent {
     this.currentHeight = event.target.innerHeight;
     this.checkInvis(event.target.innerHeight);
     this.checkScreenSize(event.target.innerWidth, event.target.innerHeight);
+  }
+
+  startRotation() {
+    setInterval(() => {
+      this.rotationState = this.rotationState === 'zero' ? 'ninety' : 'zero';
+    }, 2000); // Wechselt alle 1000ms (500ms pro Animation)
   }
 
   checkScreenSize(width: number, height: number) {

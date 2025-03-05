@@ -26,6 +26,10 @@
   </footer>
 </section>
 
-<div class="rotate-device" *ngIf="isMobilePortrait" [@fadeInOut]>
+<div class="rotate-device" *ngIf="isMobilePortrait">
+  <div class="phone" [@rotate]="rotationState">
+    <div class="island"></div>
+    <div class="circle"></div>
+  </div>
   <p>Hey, rotate your device!</p>
 </div>
