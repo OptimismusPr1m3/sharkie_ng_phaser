@@ -46,6 +46,7 @@ export class LandingpageComponent {
   minWidth: number = 768;
   isMobilePortrait: boolean = false;
   rotationState: string = 'zero';
+  backgroundImage = `url('assets/landing/sharkie_landing.png')`;
 
   constructor(public globalStateService: GlobalstateserviceService) {
     this.currentHeight = window.innerHeight;

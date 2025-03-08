@@ -27,7 +27,7 @@ $key-color: #1B1464;
 @font-face {
   font-display: swap;
   font-family: "LGUY";
-  src: url("/fonts/LuckiestGuy-Regular.ttf") format("truetype");
+  src: url('../public/fonts/LuckiestGuy-Regular.ttf') format("truetype");
   font-weight: normal;
   font-style: normal;
 }
