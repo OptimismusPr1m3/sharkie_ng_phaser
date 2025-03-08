@@ -12,11 +12,17 @@ section {
   );
   border: style.$primary-color 3px solid;
   border-radius: 14px;
+  @media (max-width: 870px) or (max-height: 600px){
+    width: 548px;
+    height: 300px;
+  }
   > .page {
     width: 100%;
     min-height: 320px;
     @include style.dFlex(column, space-between, center, 16px);
-
+    @media (max-width: 870px) {
+      min-height: 260px;
+    }
     > .head {
       width: 100%;
       @include style.dFlex(row, flex-start, center, 64px);
@@ -32,15 +38,25 @@ section {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
+        @media (max-width: 870px) or (max-height: 600px){
+          font-size: 32px;
+          width: 60%;
+        }
       }
       > span {
         width: 10%;
         height: 60px;
+        @media (max-width: 870px) or (max-height: 600px){
+          width: 20%;
+        }
       }
       > div {
         @include style.dFlex(row, center, center);
         height: 60px;
         width: 10%;
+        @media (max-width: 870px) or (max-height: 600px){
+          width: 20%;
+        }
         > mat-icon {
           border-radius: 50%;
           padding: 4px;
@@ -68,7 +84,7 @@ section {
       > span {
         @include style.dFlex(row, center, center, 8px);
         width: 100%;
-        color: #1B1464;
+        color: #1b1464;
       }
       > p {
         width: 60%;
@@ -107,27 +123,39 @@ section {
 
 .page-boss {
   min-height: 355px !important;
+  @media (max-width: 870px) or (max-height: 600px){
+    min-height: 260px !important;
+}
 }
 
 .boss {
-  background-image: url('/manual/poisoned_bubb.png');
+  background-image: url("/manual/poisoned_bubb.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: -60px;
+  @media (max-width: 870px) or (max-height: 600px){
+    background-position-x: 0px;
+}
 }
 
 .puffer {
-  background-image: url('/manual/fin_slap.png');
+  background-image: url("/manual/fin_slap.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: -60px;
+  @media (max-width: 870px) or (max-height: 600px){
+    background-position-x: 0px;
+}
 }
 
 .jelly {
-  background-image: url('/manual/jelly_bubb.png');
+  background-image: url("/manual/jelly_bubb.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position-x: -70px;
+  @media (max-width: 870px) or (max-height: 600px){
+    background-position-x: -10px;
+}
 }
 
 app-key {

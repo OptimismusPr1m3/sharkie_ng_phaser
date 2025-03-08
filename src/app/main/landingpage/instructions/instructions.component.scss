@@ -12,6 +12,10 @@ section {
   );
   border: style.$primary-color 3px solid;
   border-radius: 14px;
+  @media (max-width: 870px) or (max-height: 600px){
+    width: 464px;
+    height: 400px;
+}
   > .page {
     width: 100%;
     min-height: 320px;
@@ -32,15 +36,25 @@ section {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
+        @media (max-width: 870px) or (max-height: 600px) {
+            font-size: 32px;
+            width: 60%;
+        }
       }
       > span {
         width: 10%;
         height: 60px;
+        @media (max-width: 870px) or (max-height: 600px) {
+            width: 20%;
+      }
       }
       > div {
         @include style.dFlex(row, center, center);
         height: 60px;
         width: 10%;
+        @media (max-width: 870px) or (max-height: 600px){
+          width: 20%;
+    }
         > mat-icon {
           border-radius: 50%;
           padding: 4px;
@@ -76,6 +90,9 @@ section {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        @media (max-width: 870px) or (max-height: 600px){
+            font-size: 20px;
+        }
       }
     }
   }
