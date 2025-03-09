@@ -67,6 +67,9 @@ export class GameComponent {
 
     this.game.events.once('scene-booted', () => {
       console.log('Scene booted!');
+      if (window.innerHeight < 600) {
+        this.handleFullScreen();
+      }
       this.spinner.hide();
     });
 
