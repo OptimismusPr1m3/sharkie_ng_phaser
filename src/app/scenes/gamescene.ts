@@ -208,6 +208,17 @@ export class Gamescene extends Phaser.Scene {
     this.calculateBossDistance();
     this.checkFPSToggle();
     this.checkHitboxToggle();
+    this.checkWinLoseState();
+  }
+
+  checkWinLoseState() {
+    if (this.boss.hasDied) {
+      this.globalStateService.playerWinState.set(true);
+      this.globalStateService.isWinLoseScreen.set(true);
+    } else if (this.player.hasDied) {
+      this.globalStateService.playerWinState.set(false);
+      this.globalStateService.isWinLoseScreen.set(true);
+    }
   }
 
   checkHitboxToggle() {

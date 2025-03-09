@@ -7,6 +7,9 @@
       <span (click)="openControls()"><mat-icon fontSet="material-symbols-outlined">info</mat-icon></span>
       <span (click)="openSettings()"><mat-icon fontSet="material-symbols-outlined">settings</mat-icon></span>
     </div>
+    <div class="win-lose-overlay" *ngIf="globalStateService.isWinLoseScreen()">
+      <app-win-lose (isWinLoseScreen)="handlePause()" (isRestarting)="handleRestart()" (isBackHome)="handleHome()"></app-win-lose>
+    </div>
   </div>
 </section>
 

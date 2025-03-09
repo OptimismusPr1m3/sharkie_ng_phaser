@@ -19,6 +19,10 @@ export class GlobalstateserviceService {
   isShowingFPS = signal<boolean>(false);
   isShowingHitboxes = signal<boolean>(false);
 
+  isWinLoseScreen = signal<boolean>(false);
+  playerWinState = signal<boolean>(false);
+  wantsRestart = signal<boolean>(false);
+
   constructor() {}
 
   getPBubbles() {
@@ -45,6 +49,8 @@ export class GlobalstateserviceService {
       case 'health':
         if (this.currentHealth() + value < 6 && this.currentHealth() + value > 0) {
           this.currentHealth.set(this.currentHealth() + value);
+        } else if (this.currentHealth() + value <= 1){
+          this.currentHealth.set(1);
         }
         console.log('Health:', this.currentHealth());
         break;

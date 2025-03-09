@@ -103,35 +103,58 @@ export class Player extends MovableObjects {
     } else {
       this.manageMobileInputs();
     }
+    this.checkHealth();
+    this.manageDying();
+  }
+
+  manageDying() {
+    if (this.isDead && !this.hasDied) {
+      this.playerSprite.setVelocity(0);
+      this.playerSprite.anims
+        .play('poisoned_death', true)
+        .once('animationcomplete', () => {
+          this.hasDied = true;
+          console.log('Dying');
+        });
+    }
+  }
+
+  checkHealth() {
+    if (this.globalStateService.currentHealth() == 1 && !this.hasDied) {
+      this.isDead = true;
+    }
   }
 
   manageInputs() {
     const keys = this.keyboardInput.getCursorKeys();
-    if (this.isAttacking) return;
+    if (this.isAttacking || this.isDead || this.hasDied) return;
 
     if (
       (keys.down.isDown ||
         keys.up.isDown ||
         keys.left.isDown ||
         keys.right.isDown) &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageMovement(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
       (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
       this.scene.time.now - this.lastInputTime > this.idleThreshold &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageLongIdle();
-    } else if (!this.isHit) {
+    } else if (!this.isHit && !this.isDead) {
       this.idle(this.playerSprite, 'idle');
     }
   }
@@ -143,24 +166,27 @@ export class Player extends MovableObjects {
 
     if (
       (joystick.left || joystick.right || joystick.up || joystick.down) &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageMobileMovement(joystick);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
       (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
     } else if (
       this.scene.time.now - this.lastInputTime > this.idleThreshold &&
-      !this.isHit
+      !this.isHit &&
+      !this.isDead
     ) {
       this.manageLongIdle();
-    } else if (!this.isHit) {
+    } else if (!this.isHit && !this.isDead) {
       this.idle(this.playerSprite, 'idle');
     }
   }
@@ -391,13 +417,13 @@ export class Player extends MovableObjects {
       key: 'poisoned_death',
       frames: this.getSpriteImages('poisoned_death_anim', 12),
       frameRate: 9,
-      repeat: -1,
+      repeat: 0,
     });
     this.scene.anims.create({
       key: 'shock_death',
       frames: this.getSpriteImages('shock_death_anim', 10),
       frameRate: 9,
-      repeat: -1,
+      repeat: 0,
     });
   }
 }

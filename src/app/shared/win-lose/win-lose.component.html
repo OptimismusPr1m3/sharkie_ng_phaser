@@ -1,0 +1,8 @@
+<section>
+    <img *ngIf="won" src="win-lose/Recurso 22.png" alt="win-lose">
+    <img *ngIf="!won" src="win-lose/Recurso 9.png" alt="win-lose">
+    <div class="buttons">
+        <div (click)="restart()"><span>Neustart</span></div>
+        <div (click)="backHome()"><span>Hauptmenü</span></div>
+    </div>
+</section>

@@ -1,16 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, output, ViewChild } from '@angular/core';
 import Phaser from 'phaser';
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 import { GlobalstateserviceService } from '../../services/globalstate.service';
 import { PhaserConfigService } from '../../services/phaser-config.service';
 import { MatIconModule } from '@angular/material/icon';
 import { InstructionsComponent } from '../landingpage/instructions/instructions.component';
-import { SettingsComponent } from "../landingpage/settings/settings.component";
+import { SettingsComponent } from '../landingpage/settings/settings.component';
+import { WinLoseComponent } from '../../shared/win-lose/win-lose.component';
 
 @Component({
   selector: 'app-game',
-  imports: [CommonModule, NgxSpinnerComponent, MatIconModule, InstructionsComponent, SettingsComponent],
+  imports: [
+    CommonModule,
+    NgxSpinnerComponent,
+    MatIconModule,
+    InstructionsComponent,
+    SettingsComponent,
+    WinLoseComponent
+  ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
@@ -67,6 +75,18 @@ export class GameComponent {
     }, 15000);
   }
 
+  handlePause() {
+    this.game?.scene.pause('Gamescene');
+  }
+
+  handleRestart() {
+    // todo: restart game
+  }
+
+  handleHome() {
+    window.location.reload();
+  }
+
   handleAudio() {
     this.isMuted = !this.isMuted;
     if (this.game) {
@@ -97,11 +117,11 @@ export class GameComponent {
     if (this.phaserFrameElement) {
       const element = this.phaserFrameElement.nativeElement;
       if (!document.fullscreenElement) {
-        element.requestFullscreen().catch(err => {
+        element.requestFullscreen().catch((err) => {
           console.error('Fehler beim Aktivieren des Fullscreen-Modus:', err);
         });
       } else {
-        document.exitFullscreen().catch(err => {
+        document.exitFullscreen().catch((err) => {
           console.error('Fehler beim Verlassen des Fullscreen-Modus:', err);
         });
       }

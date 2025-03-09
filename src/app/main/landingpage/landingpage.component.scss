@@ -93,6 +93,15 @@ section {
     background-color: $primary-color;
     border-radius: 16px;
     padding: 4px 4px;
+    @media (min-width: 2220px) {
+      width: 72% !important;  
+    }
+    @media (min-width: 2062px) and (max-width: 2219px) {
+      width: 80% !important;  
+    }
+    @media (min-width: 1920px) and (max-width: 2061px) {
+      width: 90% !important;  
+    }
     @media (max-height: 1080px) {
       margin-top: 24px;
     }
@@ -186,4 +195,16 @@ section {
     font-size: 1em;
     margin-top: 40px;
   }
+}
+
+
+.win-lose-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  @include styles.dFlex(row, center, center);
 }
