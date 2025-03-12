@@ -1,5 +1,5 @@
 <section>
-  <header *ngIf="!(isInvis && isPlayGamePressed)">
+  <header *ngIf="!(isInvis && isPlayGamePressed) && !(isInvis && isInstructionsPressed) && !(isInvis && isManual)">
     <h1>The Adventure of Sharkie</h1>
   </header>
   <div
@@ -9,6 +9,8 @@
       'instructions' : isInstructionsPressed,
       '': !isPlayGamePressed && !isInstructionsPressed
     }"
+    [ngStyle]="isInstructionsPressed && isInvis ? {'margin-top': '8px' } : {}"
+    [ngStyle]="isManual && isInvis ? {'margin-top': '8px' } : {}"
   >
     <div *ngIf="isChoosing" class="choseScreen">
       <div (click)="openManual()"><span >Anleitung</span></div>

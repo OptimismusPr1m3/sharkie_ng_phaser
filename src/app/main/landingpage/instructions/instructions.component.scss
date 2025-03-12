@@ -10,20 +10,30 @@ section {
     rgba(255, 255, 255, 0.055),
     rgba(255, 255, 255, 0.3)
   );
-  border: style.$primary-color 3px solid;
-  border-radius: 14px;
-  @media (max-width: 870px) or (max-height: 600px){
+  border-radius: 12px;
+  @media (max-width: 870px) or (max-height: 600px) {
     width: 464px;
     height: 400px;
-}
+  }
+  @media (max-height: 500px) {
+    width: 400px;
+    height: auto;
+    padding: 8px;
+  }
   > .page {
     width: 100%;
     min-height: 320px;
     @include style.dFlex(column, space-between, center, 16px);
-
+    @media (max-height: 500px) {
+      min-height: 266px;
+      gap: 4px;
+    }
     > .head {
       width: 100%;
       @include style.dFlex(row, flex-start, center, 64px);
+      @media (max-height: 500px) {
+        gap: 32px;
+      }
       > h1 {
         text-align: center;
         width: 80%;
@@ -37,24 +47,34 @@ section {
         -webkit-text-fill-color: transparent;
         margin: 0;
         @media (max-width: 870px) or (max-height: 600px) {
-            font-size: 32px;
-            width: 60%;
+          font-size: 32px;
+          width: 60%;
+        }
+        @media (max-height: 500px) {
+          width: 75%;
         }
       }
       > span {
         width: 10%;
         height: 60px;
         @media (max-width: 870px) or (max-height: 600px) {
-            width: 20%;
-      }
+          width: 20%;
+        }
+        @media (max-height: 500px) {
+          width: 5%;
+        }
       }
       > div {
         @include style.dFlex(row, center, center);
         height: 60px;
         width: 10%;
-        @media (max-width: 870px) or (max-height: 600px){
+        @media (max-width: 870px) or (max-height: 600px) {
           width: 20%;
-    }
+        }
+        @media (max-height: 500px) {
+          height: 50px;
+          width: 20%;
+        }
         > mat-icon {
           border-radius: 50%;
           padding: 4px;
@@ -68,6 +88,12 @@ section {
           background-clip: text;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          @media (max-height: 500px) {
+            font-size: 28px;
+            height: 28px;
+            width: 28px;
+            padding: 2px;
+          }
           &:hover {
             border: 2px solid style.$primary-color;
             cursor: pointer;
@@ -90,8 +116,12 @@ section {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        @media (max-width: 870px) or (max-height: 600px){
-            font-size: 20px;
+        @media (max-width: 870px) or (max-height: 600px) {
+          font-size: 20px;
+        }
+        @media (max-height: 500px) {
+          width: 55%;
+          font-size: 18px;
         }
       }
     }
@@ -113,6 +143,9 @@ section {
         border-radius: 8px;
         cursor: pointer;
       }
+      @media (max-height: 500px) {
+        font-size: 14px;
+      }
     }
   }
 }
@@ -120,4 +153,7 @@ section {
 app-key {
   width: 40%;
   @include style.dFlex(row, center, center);
+  @media (max-height: 500px) {
+    width: 45%;
+  }
 }

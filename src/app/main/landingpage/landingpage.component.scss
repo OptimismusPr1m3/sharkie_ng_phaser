@@ -51,7 +51,7 @@ section {
 
   > .game-container {
     width: auto;
-    max-width: 1920px;
+    max-width: 1600px;
     height: auto;
     @media (max-width: 870px) or (max-height: 600px) {
     }
@@ -110,6 +110,7 @@ section {
     }
     @media (max-height: 1080px) {
       margin-top: 24px;
+      width: 86% !important;
     }
     @media (max-height: 600px) and (max-width: 950px) {
       width: 70% !important;

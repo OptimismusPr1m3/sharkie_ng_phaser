@@ -88,11 +88,8 @@ export class LandingpageComponent {
 
   openInstructions() {
     this.isChoosing = !this.isChoosing;
+    this.isInstructionsPressed = !this.isInstructionsPressed
     this.isManual = false;
-  }
-
-  handleClosing(event: any) {
-    this.isChoosing = !this.isChoosing;
   }
 
   openManual() {
