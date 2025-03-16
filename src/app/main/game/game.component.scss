@@ -25,8 +25,9 @@ section {
       right: 0;
       width: 220px;
       height: 50px;
-      @include styles.dFlex(row, center, center, 16px);
+      @include styles.dFlex(row, flex-end, center, 16px);
       box-sizing: border-box;
+      padding-right: 8px;
       > span {
         @include styles.dFlex(row, center, center);
         height: 40px;
@@ -35,7 +36,7 @@ section {
         box-sizing: border-box;
         &:hover {
           cursor: pointer;
-          border: 2px solid styles.$key-color;
+          border: 2px solid styles.$secondary-color;
         }
       }
     }
@@ -54,7 +55,7 @@ section {
   mat-icon {
     align-items: center;
     font-size: 34px;
-    color: styles.$key-color;
+    color: styles.$secondary-color;
     height: 34px;
     width: 34px;
   }

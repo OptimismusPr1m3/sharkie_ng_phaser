@@ -18,6 +18,7 @@ export class GlobalstateserviceService {
 
   isShowingFPS = signal<boolean>(false);
   isShowingHitboxes = signal<boolean>(false);
+  isFullScreen = signal<boolean>(false)
 
   isWinLoseScreen = signal<boolean>(false);
   playerWinState = signal<boolean>(false);

@@ -120,10 +120,12 @@ export class GameComponent {
     if (this.phaserFrameElement) {
       const element = this.phaserFrameElement.nativeElement;
       if (!document.fullscreenElement) {
+        this.globalStateService.isFullScreen.set(true)
         element.requestFullscreen().catch((err) => {
           console.error('Fehler beim Aktivieren des Fullscreen-Modus:', err);
         });
       } else {
+        this.globalStateService.isFullScreen.set(false)
         document.exitFullscreen().catch((err) => {
           console.error('Fehler beim Verlassen des Fullscreen-Modus:', err);
         });
