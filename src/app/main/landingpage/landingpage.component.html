@@ -9,8 +9,8 @@
       'instructions' : isInstructionsPressed,
       '': !isPlayGamePressed && !isInstructionsPressed
     }"
-    [ngStyle]="isInstructionsPressed && isInvis ? {'margin-top': '8px' } : {}"
-    [ngStyle]="isManual && isInvis ? {'margin-top': '8px' } : {}"
+    [ngStyle]="isInstructionsPressed && isInvis ? {'margin-top': '32px' } : {}"
+    [ngStyle]="isManual && isInvis ? {'margin-top': '32px' } : {}"
   >
     <div *ngIf="isChoosing" class="choseScreen">
       <div (click)="openManual()"><span >Anleitung</span></div>
