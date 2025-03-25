@@ -1,0 +1,164 @@
+@use "../../../styles.scss" as style;
+
+section {
+  height: 100vh;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.055),
+      rgba(0, 0, 0, 0.3)
+    ),
+    url("../../../../public/assets/landing/sharkie_landing.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  @include style.dFlex(row, center, center);
+  div {
+    height: 80vh;
+    width: 100%;
+    @include style.dFlex(row, center, center);
+    .content {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+      @include style.dFlex(column, flex-start, flex-start);
+      width: 90%;
+      border: 3px solid style.$primary-color;
+      border-radius: 12px;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+      .head {
+        height: 100px;
+        overflow: hidden;
+        width: 100%;
+        @include style.dFlex(row, flex-start, center, 64px);
+        @media (max-width: 870px) or (max-height: 600px) {
+          gap: 16px;
+        }
+        @media (max-height: 500px) {
+          gap: 16px;
+        }
+        @media (max-width: 500px) {
+          gap: 0px;
+        }
+        h1 {
+          text-align: center;
+          width: 80%;
+          font-size: 48px;
+          background: linear-gradient(
+            style.$primary-color,
+            style.$secondary-color
+          );
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          margin: 0;
+          @media (max-width: 870px) or (max-height: 600px) {
+            font-size: 28px;
+            width: 80%;
+          }
+          @media (max-height: 500px) {
+            width: 75%;
+            font-size: 28px;
+          }
+          @media (max-width: 500px) {
+            width: 85%;
+            font-size: 26px;
+          }
+        }
+        span {
+          width: 5%;
+          height: 60px;
+          @media (max-width: 870px) or (max-height: 600px) {
+            width: 5%;
+          }
+          @media (max-height: 500px) {
+            width: 5%;
+          }
+          @media (max-width: 500px) {
+            display: none;
+          }
+        }
+        div {
+          overflow: hidden;
+          @include style.dFlex(row, center, center);
+          height: 60px;
+          width: 5%;
+          @media (max-width: 870px) or (max-height: 600px) {
+            width: 10%;
+          }
+          @media (max-height: 500px) {
+            height: 50px;
+            width: 10%;
+          }
+          @media (max-width: 500px) {
+            width: 15%;
+          }
+          > mat-icon {
+            border-radius: 50%;
+            padding: 4px;
+            font-size: 32px;
+            height: 32px;
+            width: 32px;
+            background: linear-gradient(
+              style.$primary-color,
+              style.$secondary-color
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            @media (max-height: 500px) {
+              font-size: 28px;
+              height: 28px;
+              width: 28px;
+              padding: 2px;
+            }
+            &:hover {
+              border: 2px solid style.$primary-color;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .policy {
+        @include style.dFlex(column, flex-start, flex-start);
+        padding: 0;
+        height: calc(100% - 100px);
+        overflow-y: auto;
+        box-sizing: border-box;
+        color: #fdf480;
+        padding-right: 4px;
+        > h1 {
+          font-size: 48px;
+          @media (max-width: 860px) {
+            font-size: 36px;
+          }
+        }
+        > h2 {
+          font-size: 40px;
+          @media (max-width: 860px) {
+            font-size: 28px;
+          }
+        }
+        > h3 {
+          font-size: 32px;
+          @media (max-width: 860px) {
+            font-size: 22px;
+          }
+        }
+        > p {
+          font-size: 24px;
+          @media (max-width: 860px) {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+  color: #fdf480;
+  &:hover {
+    text-decoration: underline;
+  }
+}
