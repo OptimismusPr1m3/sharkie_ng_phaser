@@ -17,6 +17,7 @@ section {
     width: 100%;
     @include style.dFlex(row, center, center);
     .content {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
       @include style.dFlex(column, space-evenly, flex-start);
       min-height: 300px;
       width: 500px;

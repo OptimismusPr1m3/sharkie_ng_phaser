@@ -5,6 +5,7 @@ export class Jellyfish extends MovableObjects {
 
   enemySprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   color!: string
+  animationFrameRate!:number
   
   
 
@@ -47,14 +48,17 @@ export class Jellyfish extends MovableObjects {
   setUpJelly() {
     this.frameRate = -this.randomizePosition(4, 9)
     if (this.frameRate < -8  || this.frameRate < -6) {
-      this.speed = -20
+      this.speed = -60
+      this.animationFrameRate = 2
       console.log('FrameRate: ', this.frameRate)
     } else if (this.frameRate < -6 || this.frameRate < -4) {
       console.log('FrameRate: ', this.frameRate)
-      this.speed = -85
+      this.speed = -90
+      this.animationFrameRate = 4
     } else {
       console.log('FrameRate: ', this.frameRate)
-      this.speed = -120
+      this.speed = -150
+      this.animationFrameRate = 6
     }
 
     console.log(this.speed)
@@ -85,7 +89,7 @@ export class Jellyfish extends MovableObjects {
       this.scene.anims.create({
         key: `${this.color}_aggro_swim_anim`,
         frames: this.getSpriteImages(`${this.color}_aggro_swim`, 4),
-        frameRate: Math.random() * 5,
+        frameRate: this.animationFrameRate,
         repeat: -1,
       });
     }
