@@ -8,6 +8,7 @@ import { Potions } from '../classes/potions.class';
 import { Progressbar } from '../classes/progressbar.class';
 import { Coins } from '../classes/coins.class';
 import { Boss } from '../classes/boss.class';
+import { Audio } from '../classes/audio.class';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
@@ -20,12 +21,14 @@ export class Gamescene extends Phaser.Scene {
   private progressBars: Progressbar[] = [];
   private fpsText!: Phaser.GameObjects.Text;
   private debugGraphics: Phaser.GameObjects.Graphics | null = null;
+  private backgroundMusic!: Audio;
 
   constructor(public globalStateService: GlobalstateserviceService) {
     super({ key: 'Gamescene' });
     this.background = new Background(this, globalStateService);
     this.player = new Player(this, globalStateService);
     this.boss = new Boss(this, globalStateService);
+    this.backgroundMusic = new Audio(this);
     this.progressBars = [
       new Progressbar(this, 'health', globalStateService, 50),
       new Progressbar(this, 'coin', globalStateService, 190),
@@ -81,6 +84,7 @@ export class Gamescene extends Phaser.Scene {
     this.progressBars.forEach((bar) => bar.preload());
     this.player.preload();
     this.boss.preload();
+    this.backgroundMusic.preload();
   }
 
   create() {
@@ -105,6 +109,7 @@ export class Gamescene extends Phaser.Scene {
     this.fpsText = this.add
       .text(1920 / 2, 20, '', { fontSize: '24px', color: '#D6195E', fontFamily: 'LGUY' })
       .setScrollFactor(0);
+    this.backgroundMusic.create();
     this.fpsText.setVisible(false);
     this.sys.game.events.emit('scene-booted');
   }

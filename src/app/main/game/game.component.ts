@@ -92,9 +92,9 @@ export class GameComponent {
 
   handleAudio() {
     this.isMuted = !this.isMuted;
-    if (this.game) {
-      //this.game.sound.mute = this.isMuted;
-    }
+    if (this.game && this.isMuted) {
+      this.game.sound.pauseAll();
+    } else { this.game?.sound.resumeAll();}
   }
 
   isClosing() {
