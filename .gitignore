@@ -42,9 +42,10 @@ testem.log
 .DS_Store
 Thumbs.db
 #assets
+/public/audio
 /public/fonts/
 /public/assets/
 /public/assets/
 /public/manual/
-/public/audio/
+/public/audio
 /public/win-lose/
