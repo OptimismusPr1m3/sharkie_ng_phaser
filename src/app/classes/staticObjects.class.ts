@@ -9,6 +9,7 @@ export class StaticObjects {
   posY!: number;
   objectSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   globalStates: GlobalstateserviceService;
+  rndNumber!: number;
 
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     this.scene = scene;
@@ -38,7 +39,20 @@ export class StaticObjects {
     sprite.anims.play(animation, true);
   }
 
-  randomizePosition(min:number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  randomizePositions(min: number, max: number, pos: string): number {
+    this.rndNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    const randomPositions = pos === 'X' ? this.globalStates.randomizedPostionsX() : this.globalStates.randomizedPostionsY();
+    //console.log(`Random Positions${pos}:`, randomPositions);
+    while (randomPositions.includes(this.rndNumber)) {
+      this.rndNumber += 155;
+    }
+    randomPositions.push(this.rndNumber);
+    if (pos === 'X') {
+      this.globalStates.randomizedPostionsX.set(randomPositions);
+    } else {
+      this.globalStates.randomizedPostionsY.set(randomPositions);
+    }
+    return this.rndNumber;
   }
+
 }

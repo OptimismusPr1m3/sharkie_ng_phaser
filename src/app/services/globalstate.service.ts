@@ -23,6 +23,8 @@ export class GlobalstateserviceService {
   isWinLoseScreen = signal<boolean>(false);
   playerWinState = signal<boolean>(false);
   wantsRestart = signal<boolean>(false);
+  randomizedPostionsX = signal<number[]>([]);
+  randomizedPostionsY = signal<number[]>([]);
 
   constructor() {}
 
