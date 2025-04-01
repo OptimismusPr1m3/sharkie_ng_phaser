@@ -220,9 +220,11 @@ export class Gamescene extends Phaser.Scene {
     if (this.boss.hasDied) {
       this.globalStateService.playerWinState.set(true);
       this.globalStateService.isWinLoseScreen.set(true);
+      this.backgroundMusic.pauseAudio('backgroundMusic');
     } else if (this.player.hasDied) {
       this.globalStateService.playerWinState.set(false);
       this.globalStateService.isWinLoseScreen.set(true);
+      this.backgroundMusic.pauseAudio('backgroundMusic');
     }
   }
 

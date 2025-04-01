@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { InstructionsComponent } from '../landingpage/instructions/instructions.component';
 import { SettingsComponent } from '../landingpage/settings/settings.component';
 import { WinLoseComponent } from '../../shared/win-lose/win-lose.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -50,14 +51,22 @@ export class GameComponent {
   constructor(
     private phaserConfigService: PhaserConfigService,
     private spinner: NgxSpinnerService,
-    public globalStateService: GlobalstateserviceService
+    public globalStateService: GlobalstateserviceService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
     if (window.innerWidth < 1920) {
       this.isOverFHD = false;
     }
+    this.startGame();
+  }
 
+  handlePause() {
+    this.game?.scene.pause('Gamescene');
+  }
+
+  startGame() {
     this.spinner.show();
 
     const config = this.phaserConfigService.getConfig();
@@ -78,13 +87,21 @@ export class GameComponent {
     }, 15000);
   }
 
-  handlePause() {
-    this.game?.scene.pause('Gamescene');
-  }
+  // handleRestart() {
+  //   this.globalStateService.restart();
+  //   this.game?.destroy(false, false);
+  //   this.startGame()
+  //   console.log('winLoseState: ',this.globalStateService.isWinLoseScreen());
+  // }
+
 
   handleRestart() {
-    // todo: restart game
+    const queryParams = {isRestarting: true};
+    this.router.navigate(['/'], { queryParams }).then(() => {
+      window.location.reload();
+    });
   }
+
 
   handleHome() {
     window.location.reload();

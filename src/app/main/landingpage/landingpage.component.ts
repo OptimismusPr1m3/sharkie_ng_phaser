@@ -3,7 +3,7 @@ import { GameComponent } from '../game/game.component';
 import { CommonModule } from '@angular/common';
 import { InstructionsComponent } from './instructions/instructions.component';
 import { ManualComponent } from './manual/manual.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { GlobalstateserviceService } from '../../services/globalstate.service';
 import {
   trigger,
@@ -48,7 +48,10 @@ export class LandingpageComponent {
   rotationState: string = 'zero';
   backgroundImage = `url('assets/landing/sharkie_landing.png')`;
 
-  constructor(public globalStateService: GlobalstateserviceService) {
+  constructor(
+    public globalStateService: GlobalstateserviceService,
+    private router: Router
+  ) {
     this.currentHeight = window.innerHeight;
     this.checkInvis(window.innerHeight);
     this.checkScreenSize(window.innerWidth, window.innerHeight);
@@ -60,6 +63,21 @@ export class LandingpageComponent {
     this.currentHeight = event.target.innerHeight;
     this.checkInvis(event.target.innerHeight);
     this.checkScreenSize(event.target.innerWidth, event.target.innerHeight);
+  }
+
+  ngOnInit() {
+    this.checkParams();
+  }
+
+  checkParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRestarting = urlParams.get('isRestarting');
+    if (isRestarting) {
+      this.startGame();
+      this.router.navigate(['/'], { queryParams: {}, replaceUrl: true });
+    } else {
+      console.log('No restart parameter found.');
+    }
   }
 
   startRotation() {
@@ -88,7 +106,7 @@ export class LandingpageComponent {
 
   openInstructions() {
     this.isChoosing = !this.isChoosing;
-    this.isInstructionsPressed = !this.isInstructionsPressed
+    this.isInstructionsPressed = !this.isInstructionsPressed;
     this.isManual = false;
   }
 

@@ -28,6 +28,21 @@ export class GlobalstateserviceService {
 
   constructor() {}
 
+  restart() {
+    this.activePBubbles.set([]);
+    this.activeWBubbles.set([]);
+    this.activeSlapBoxes.set([]);
+    this.hasSlapped.set(false);
+    this.currentPotions.set(1);
+    this.currentCoins.set(1);
+    this.currentHealth.set(6);
+    this.isShowingFPS.set(false);
+    this.isShowingHitboxes.set(false);
+    this.isFullScreen.set(false);
+    this.isWinLoseScreen.set(false);
+    this.playerWinState.set(false);
+  }
+
   getPBubbles() {
     return this.activePBubbles();
   }
