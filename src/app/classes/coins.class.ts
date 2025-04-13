@@ -4,7 +4,7 @@ import { StaticObjects } from './staticObjects.class';
 export class Coins extends StaticObjects {
   constructor(scene: Phaser.Scene, globalStates: GlobalstateserviceService) {
     super(scene, globalStates);
-    this.posX = this.randomizePositions(900, 1920 * 2, 'X');
+    this.posX = this.randomizePositions(900, 1920 * 4, 'X');
     this.posY = this.randomizePositions(900, 1000, 'Y');
   }
 

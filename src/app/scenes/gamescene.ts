@@ -88,7 +88,7 @@ export class Gamescene extends Phaser.Scene {
   }
 
   create() {
-    this.physics.world.setBounds(0, 0, 1920 * 2, 1080);
+    this.physics.world.setBounds(0, 0, 1920 * 4, 1080);  // set worldbounds i.e max traveling amount of sharkie
     this.background.create();
     this.createObjects(this.progressBars);
     this.setupPhysicsGroups();
@@ -103,7 +103,7 @@ export class Gamescene extends Phaser.Scene {
       0.1,
       -400
     ); // -400 offset to camera scroll deadzone
-    this.cameras.main.setBounds(0, 0, 1920 * 2, 1080);
+    this.cameras.main.setBounds(0, 0, 1920 * 4, 1080); // set worldbounds i.e max traveling amount of sharkie
 
     this.setupCollider();
     this.fpsText = this.add

@@ -18,7 +18,7 @@ export class Jellyfish extends MovableObjects {
     this.offsetX = 20;
     this.offsetY = 40;
     this.posY = this.randomizePosition(200, 1000);
-    this.posX = this.randomizePosition(900, 1920 * 3);
+    this.posX = this.randomizePosition(900, 960 * 6);
     this.setUpJelly()
     this.color = color
   }

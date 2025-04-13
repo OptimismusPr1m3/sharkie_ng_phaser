@@ -14,7 +14,7 @@ export class Boss extends MovableObjects {
     this.offsetX = 50;
     this.offsetY = 500;
     this.posY = this.randomizePosition(400, 600);
-    this.posX = this.randomizePosition(1920, 4260);
+    this.posX = this.randomizePosition(4260, 6200);
   }
 
   preload() {
