@@ -4,6 +4,9 @@ import { KeyboardInputs } from './keyboardInputs.class';
 import { CustomKeys } from '../interfaces/CustomKeys.interface';
 import { Throwable } from './throwable.class';
 import { GlobalstateserviceService } from '../services/globalstate.service';
+import { GAME_CONFIG } from '../game.config';
+
+type JoystickState = { left: boolean; right: boolean; up: boolean; down: boolean };
 
 export class Player extends MovableObjects {
   playerSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -13,10 +16,10 @@ export class Player extends MovableObjects {
   throwable_white!: Throwable;
   slapBox!: Throwable;
   isLongIdle: boolean = false;
-  idleThreshold: number = 3000;
   lastInputTime: number = 0;
   isHit: boolean = false;
   damageCooldown: boolean = false;
+
   constructor(
     scene: Phaser.Scene,
     public globalStateService: GlobalstateserviceService
@@ -27,7 +30,7 @@ export class Player extends MovableObjects {
     this.height = 400;
     this.offsetX = 160;
     this.offsetY = 400;
-    this.speed = 360;
+    this.speed = GAME_CONFIG.PLAYER_SPEED;
     this.throwable_pois = new Throwable(
       scene,
       'poisoned_bubble',
@@ -56,21 +59,9 @@ export class Player extends MovableObjects {
     this.loadImages(6, 'swim_anim', 'assets/sharkie/swim/');
     // ATTACK ANIMATIONS
     // Bubble Trap
-    this.loadImages(
-      8,
-      'green_bubble_trap_anim',
-      'assets/sharkie/attack/bubble_trap/green/'
-    );
-    this.loadImages(
-      8,
-      'no_bubble_trap_anim',
-      'assets/sharkie/attack/bubble_trap/no_bubble/'
-    );
-    this.loadImages(
-      8,
-      'white_bubble_trap_anim',
-      'assets/sharkie/attack/bubble_trap/white/'
-    );
+    this.loadImages(8, 'green_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/green/');
+    this.loadImages(8, 'no_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/no_bubble/');
+    this.loadImages(8, 'white_bubble_trap_anim', 'assets/sharkie/attack/bubble_trap/white/');
     // Fin Slap
     this.loadImages(8, 'fin_slap_anim', 'assets/sharkie/attack/fin_slap/');
     //HURT ANIMATIONS
@@ -85,10 +76,9 @@ export class Player extends MovableObjects {
   }
 
   create() {
-    console.log(this.scene.plugins.plugins);
     this.keyboardInput.initializeInputs();
     this.playerSprite = this.scene.physics.add
-      .sprite(200, 1080 / 1.7, 'idle_anim1')
+      .sprite(200, GAME_CONFIG.SCREEN_HEIGHT / 1.7, 'idle_anim1')
       .setScale(0.4);
     this.playerSprite.setBounce(0.0);
     this.playerSprite.setCollideWorldBounds(true);
@@ -98,11 +88,7 @@ export class Player extends MovableObjects {
   }
 
   update() {
-    if (this.scene.sys.game.device.os.desktop) {
-      this.manageInputs();
-    } else {
-      this.manageMobileInputs();
-    }
+    this.manageInputs();
     this.checkHealth();
     this.manageDying();
   }
@@ -114,7 +100,6 @@ export class Player extends MovableObjects {
         .play('poisoned_death', true)
         .once('animationcomplete', () => {
           this.hasDied = true;
-          console.log('Dying');
         });
     }
   }
@@ -127,64 +112,28 @@ export class Player extends MovableObjects {
 
   manageInputs() {
     const keys = this.keyboardInput.getCursorKeys();
+    const joystick = this.keyboardInput.getJoystick();
+    const isDesktop = this.scene.sys.game.device.os.desktop;
+
     if (this.isAttacking || this.isDead || this.hasDied) return;
 
-    if (
-      (keys.down.isDown ||
-        keys.up.isDown ||
-        keys.left.isDown ||
-        keys.right.isDown) &&
-      !this.isHit &&
-      !this.isDead
-    ) {
-      this.manageMovement(keys);
+    const isMoving = isDesktop
+      ? (keys.down.isDown || keys.up.isDown || keys.left.isDown || keys.right.isDown)
+      : (joystick.left || joystick.right || joystick.up || joystick.down);
+
+    if (isMoving && !this.isHit && !this.isDead) {
+      if (isDesktop) {
+        this.manageMovement(keys);
+      } else {
+        this.manageMobileMovement(joystick);
+      }
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if (
-      (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
-      !this.isHit &&
-      !this.isDead
-    ) {
+    } else if ((keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) && !this.isHit && !this.isDead) {
       this.manageAttacks(keys);
       this.isLongIdle = false;
       this.lastInputTime = this.scene.time.now;
-    } else if (
-      this.scene.time.now - this.lastInputTime > this.idleThreshold &&
-      !this.isHit &&
-      !this.isDead
-    ) {
-      this.manageLongIdle();
-    } else if (!this.isHit && !this.isDead) {
-      this.idle(this.playerSprite, 'idle');
-    }
-  }
-
-  manageMobileInputs() {
-    const keys = this.keyboardInput.getCursorKeys();
-    const joystick = this.keyboardInput.getJoystick();
-    if (this.isAttacking) return;
-
-    if (
-      (joystick.left || joystick.right || joystick.up || joystick.down) &&
-      !this.isHit &&
-      !this.isDead
-    ) {
-      this.manageMobileMovement(joystick);
-      this.isLongIdle = false;
-      this.lastInputTime = this.scene.time.now;
-    } else if (
-      (keys.slap.isDown || keys.space.isDown || keys.w_bubble.isDown) &&
-      !this.isHit &&
-      !this.isDead
-    ) {
-      this.manageAttacks(keys);
-      this.isLongIdle = false;
-      this.lastInputTime = this.scene.time.now;
-    } else if (
-      this.scene.time.now - this.lastInputTime > this.idleThreshold &&
-      !this.isHit &&
-      !this.isDead
-    ) {
+    } else if (this.scene.time.now - this.lastInputTime > GAME_CONFIG.IDLE_THRESHOLD_MS && !this.isHit && !this.isDead) {
       this.manageLongIdle();
     } else if (!this.isHit && !this.isDead) {
       this.idle(this.playerSprite, 'idle');
@@ -215,7 +164,7 @@ export class Player extends MovableObjects {
         this.isHit = false;
       });
 
-    this.scene.time.delayedCall(4000, () => {
+    this.scene.time.delayedCall(GAME_CONFIG.DAMAGE_COOLDOWN_MS, () => {
       this.damageCooldown = false;
     });
   }
@@ -234,7 +183,7 @@ export class Player extends MovableObjects {
     }
   }
 
-  manageMobileMovement(joystick: any) {
+  manageMobileMovement(joystick: JoystickState) {
     if (this.isAttacking) return;
 
     if (joystick.left) {
@@ -251,18 +200,10 @@ export class Player extends MovableObjects {
   manageAttacks(keys: CustomKeys) {
     if (this.isAttacking) return;
 
-    if (
-      keys.space?.isDown &&
-      !this.attackKeyPressed &&
-      this.globalStateService.currentPotions() > 1
-    ) {
+    if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() > 1) {
       this.attackKeyPressed = true;
       this.bubbleAttack(this.playerSprite, 'green_bubble_trap', true);
-    } else if (
-      keys.space?.isDown &&
-      !this.attackKeyPressed &&
-      this.globalStateService.currentPotions() == 1
-    ) {
+    } else if (keys.space?.isDown && !this.attackKeyPressed && this.globalStateService.currentPotions() == 1) {
       this.attackKeyPressed = true;
       this.noBubbleAttack(this.playerSprite, 'no_bubble_trap');
     } else if (keys.w_bubble?.isDown && !this.attackKeyPressed) {
@@ -283,9 +224,9 @@ export class Player extends MovableObjects {
     this.isAttacking = true;
     sprite.anims.play(animation).once('animationcomplete', () => {
       this.slapBox.spawnThrowable(
-        sprite.flipX ? sprite.x - 100 : sprite.x + 100,
-        sprite.y + 40,
-        sprite.flipX ? -2000 : 2000,
+        sprite.flipX ? sprite.x - GAME_CONFIG.ATTACK_OFFSET_X : sprite.x + GAME_CONFIG.ATTACK_OFFSET_X,
+        sprite.y + GAME_CONFIG.ATTACK_OFFSET_Y,
+        sprite.flipX ? -GAME_CONFIG.SLAP_SPEED : GAME_CONFIG.SLAP_SPEED,
         'slap'
       );
       this.isAttacking = false;
@@ -309,26 +250,26 @@ export class Player extends MovableObjects {
   bubbleAttack(
     sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     animation: string,
-    isPooisoned: boolean
+    isPoisoned: boolean
   ) {
     if (this.isAttacking) return;
     sprite.setVelocity(0);
     this.isAttacking = true;
     sprite.anims.play(animation).once('animationcomplete', () => {
       this.isAttacking = false;
-      if (isPooisoned) {
+      if (isPoisoned) {
         this.globalStateService.modifyProgressbar('potions', -1);
         this.throwable_pois.spawnThrowable(
-          sprite.flipX ? sprite.x - 100 : sprite.x + 100, // position form bubble to left or right depending on player direction
-          sprite.y + 40,
-          sprite.flipX ? -300 : 300, //speed to left or right depending on player direction
+          sprite.flipX ? sprite.x - GAME_CONFIG.ATTACK_OFFSET_X : sprite.x + GAME_CONFIG.ATTACK_OFFSET_X, // position of bubble to left or right depending on player direction
+          sprite.y + GAME_CONFIG.ATTACK_OFFSET_Y,
+          sprite.flipX ? -GAME_CONFIG.BUBBLE_SPEED : GAME_CONFIG.BUBBLE_SPEED, // speed to left or right depending on player direction
           'green'
         );
       } else {
         this.throwable_white.spawnThrowable(
-          sprite.flipX ? sprite.x - 100 : sprite.x + 100, // position form bubble to left or right depending on player direction
-          sprite.y + 40,
-          sprite.flipX ? -300 : 300, //speed to left or right depending on player direction
+          sprite.flipX ? sprite.x - GAME_CONFIG.ATTACK_OFFSET_X : sprite.x + GAME_CONFIG.ATTACK_OFFSET_X, // position of bubble to left or right depending on player direction
+          sprite.y + GAME_CONFIG.ATTACK_OFFSET_Y,
+          sprite.flipX ? -GAME_CONFIG.BUBBLE_SPEED : GAME_CONFIG.BUBBLE_SPEED, // speed to left or right depending on player direction
           'white'
         );
       }
@@ -339,6 +280,7 @@ export class Player extends MovableObjects {
   getPBubbles() {
     return this.globalStateService.getPBubbles();
   }
+
   getWBubbles() {
     return this.globalStateService.getWBubbles();
   }
@@ -363,7 +305,6 @@ export class Player extends MovableObjects {
       frameRate: 3,
       repeat: -1,
     });
-
     // SWIM ANIMATIONS
     this.scene.anims.create({
       key: 'swim',
@@ -371,7 +312,6 @@ export class Player extends MovableObjects {
       frameRate: 9,
       repeat: -1,
     });
-
     // ATTACK ANIMATIONS
     this.scene.anims.create({
       key: 'green_bubble_trap',
@@ -397,7 +337,6 @@ export class Player extends MovableObjects {
       frameRate: 9,
       repeat: 0,
     });
-
     // HURT ANIMATIONS
     this.scene.anims.create({
       key: 'poisoned_hurt',
@@ -411,7 +350,6 @@ export class Player extends MovableObjects {
       frameRate: 9,
       repeat: -1,
     });
-
     // DEATH ANIMATIONS
     this.scene.anims.create({
       key: 'poisoned_death',

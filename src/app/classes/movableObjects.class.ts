@@ -24,14 +24,14 @@ export class MovableObjects {
   }
 
   loadImages(amount: number, key: string, path: string) {
-    for (let i = 1; i < amount; i++) {
+    for (let i = 1; i <= amount; i++) {
       this.scene.load.image(key + i, `${path}${i}.png`);
     }
   }
 
   getSpriteImages(keyString: string, amount: number): { key: string }[] {
     const keyFrames = [];
-    for (let i = 1; i < amount; i++) {
+    for (let i = 1; i <= amount; i++) {
       keyFrames.push({ key: keyString + i });
     }
     return keyFrames;
@@ -70,7 +70,6 @@ export class MovableObjects {
     sprite.anims.play(animation).once('animationcomplete', () => {
       this.globalStates.hasSlapped.set(true);
       this.isAttacking = false;
-      console.log('attack complete');
       this.attackKeyPressed = false;
     });
   }

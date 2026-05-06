@@ -1,5 +1,6 @@
 import { GlobalstateserviceService } from '../services/globalstate.service';
 import { MovableObjects } from './movableObjects.class';
+import { GAME_CONFIG } from '../game.config';
 
 export class Boss extends MovableObjects {
   isHurted: boolean = false;
@@ -44,24 +45,19 @@ export class Boss extends MovableObjects {
 
   manageBoss(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
     if (!this.isDead && !this.isAttacking && !this.isHurted && !this.isSpawning && this.hasSpawned) {
-      this.moveBoss(100, player)
-      console.log('Boss is moving');
+      this.moveBoss(GAME_CONFIG.BOSS_SPEED, player);
     } else if (this.isHurted) {
       this.bossHurt();
-      console.log('Boss is hurted');
     } else if (this.isDead && !this.hasDied && !this.isSpawning) {
       this.bossDeath();
-      console.log('Boss is dead');
     } else if (this.isSpawning && !this.hasSpawned) {
       this.bossSpawn();
-      console.log('Boss is spawning');
     } else if (this.isAttacking && !this.isHurted && !this.isDead) {
       this.bossAttack();
-      console.log('Boss is attacking');
     }
   }
 
-  moveBoss(speed: number = 100, player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+  moveBoss(speed: number = GAME_CONFIG.BOSS_SPEED, player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
     if (this.scene.physics.overlap(this.bossSprite, player)) return; // provokes bug , so that boss is swimming in last direction till the hitboxes dont touch each other, after that boss is moving again to player (nice bug which is totally nice lol)
     this.bossSprite.anims.play('boss_idle_anim', true);
     this.scene.physics.moveToObject(this.bossSprite, player, speed);
@@ -69,11 +65,7 @@ export class Boss extends MovableObjects {
   }
 
   checkDirection(player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-    if (this.bossSprite.x > player.x) {
-      this.bossSprite.flipX = false;
-    } else {
-      this.bossSprite.flipX = true
-    }
+    this.bossSprite.flipX = this.bossSprite.x <= player.x;
   }
 
   checkHealth() {
@@ -86,7 +78,7 @@ export class Boss extends MovableObjects {
     this.bossSprite.setVelocity(0);
     this.bossSprite.anims.play('boss_attacking_anim', true).once('animationcomplete', () => {
       this.isAttacking = false;
-      this.idle(this.bossSprite ,'boss_idle_anim');
+      this.idle(this.bossSprite, 'boss_idle_anim');
     });
   }
 
@@ -94,7 +86,6 @@ export class Boss extends MovableObjects {
     this.bossSprite.anims
       .play('boss_hurt_anim', true)
       .once('animationcomplete', () => {
-        console.log('Boss health: ', this.healthPoints);
         this.isHurted = false;
       });
   }
@@ -104,7 +95,7 @@ export class Boss extends MovableObjects {
     this.bossSprite.anims
       .play('boss_dead_anim', true)
       .once('animationcomplete', () => {
-        this.hasDied = true; 
+        this.hasDied = true;
       });
   }
 
@@ -156,7 +147,7 @@ export class Boss extends MovableObjects {
         frames: this.getSpriteImages('boss_spawn', 10),
         frameRate: 8,
         repeat: 0,
-      });  
+      });
     }
   }
 }

@@ -9,13 +9,14 @@ import { Progressbar } from '../classes/progressbar.class';
 import { Coins } from '../classes/coins.class';
 import { Boss } from '../classes/boss.class';
 import { Audio } from '../classes/audio.class';
+import { GAME_CONFIG } from '../game.config';
 
 export class Gamescene extends Phaser.Scene {
   private background!: Background;
   private player!: Player;
   private boss!: Boss;
   private enemies: (Jellyfish | Pufferfish)[] = [];
-  private objects: Potions[] | Coins[] = [];
+  private objects: (Potions | Coins)[] = [];
   private enemiesGroup!: Phaser.Physics.Arcade.Group;
   private objectsGroup!: Phaser.Physics.Arcade.Group;
   private progressBars: Progressbar[] = [];
@@ -59,22 +60,12 @@ export class Gamescene extends Phaser.Scene {
     ];
   }
 
-  loadObjects(objects: any[]) {
-    objects.forEach((obj) => {
-      obj.preload();
-    });
+  private createObjects(objects: { create(): void }[]) {
+    objects.forEach((obj) => obj.create());
   }
 
-  createObjects(objects: any[]) {
-    objects.forEach((obj) => {
-      obj.create();
-    });
-  }
-
-  updateObjects(objects: any[]) {
-    objects.forEach((obj) => {
-      obj.update();
-    });
+  private updateObjects(objects: { update(): void }[]) {
+    objects.forEach((obj) => obj.update());
   }
 
   preload() {
@@ -88,7 +79,7 @@ export class Gamescene extends Phaser.Scene {
   }
 
   create() {
-    this.physics.world.setBounds(0, 0, 1920 * 4, 1080);  // set worldbounds i.e max traveling amount of sharkie
+    this.physics.world.setBounds(0, 0, GAME_CONFIG.WORLD_WIDTH, GAME_CONFIG.SCREEN_HEIGHT);  // set worldbounds i.e max traveling amount of sharkie
     this.background.create();
     this.createObjects(this.progressBars);
     this.setupPhysicsGroups();
@@ -101,13 +92,13 @@ export class Gamescene extends Phaser.Scene {
       true,
       0.1,
       0.1,
-      -400
-    ); // -400 offset to camera scroll deadzone
-    this.cameras.main.setBounds(0, 0, 1920 * 4, 1080); // set worldbounds i.e max traveling amount of sharkie
+      GAME_CONFIG.CAMERA_OFFSET_X
+    ); // CAMERA_OFFSET_X offset to camera scroll deadzone
+    this.cameras.main.setBounds(0, 0, GAME_CONFIG.WORLD_WIDTH, GAME_CONFIG.SCREEN_HEIGHT); // set worldbounds i.e max traveling amount of sharkie
 
     this.setupCollider();
     this.fpsText = this.add
-      .text(1920 / 2, 20, '', { fontSize: '24px', color: '#D6195E', fontFamily: 'LGUY' })
+      .text(GAME_CONFIG.SCREEN_WIDTH / 2, 20, '', { fontSize: '24px', color: '#D6195E', fontFamily: 'LGUY' })
       .setScrollFactor(0);
     this.backgroundMusic.create();
     this.fpsText.setVisible(false);
@@ -118,73 +109,65 @@ export class Gamescene extends Phaser.Scene {
     this.physics.add.overlap(
       this.player.playerSprite,
       this.enemiesGroup,
-      this
-        .handlePlayerEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this.handlePlayerEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     );
     this.physics.add.overlap(
       this.player.playerSprite,
       this.objectsGroup,
-      this
-        .handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this.handlePlayerPotionCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     );
     this.physics.add.overlap(
       this.boss.bossSprite,
       this.player.playerSprite,
-      this
-        .handlePlayerBossCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this.handlePlayerBossCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     );
   }
 
   handlePlayerEnemyCollision(
-    player: Phaser.Types.Physics.Arcade.GameObjectWithBody, // kann eigentlich geloescht werden
-    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody // kann eigentlich geloescht werden
+    _player: Phaser.Types.Physics.Arcade.GameObjectWithBody, // kann eigentlich geloescht werden
+    _enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody   // kann eigentlich geloescht werden
   ) {
     if (this.player.damageCooldown) return;
-    console.log('Kollision mit einem Gegner!');
     this.player.hasBeenHit(-1);
   }
 
   handlePlayerBossCollision() {
     if (this.player.damageCooldown) return;
-    console.log('Kollision mit Boss!');
     this.boss.isAttacking = true;
     this.player.hasBeenHit(-2);
   }
 
   handlePlayerPotionCollision(
-    player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    _player: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     potion: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) {
     const hitObject = this.objects.find((p) => p.objectSprite === potion);
     if (hitObject instanceof Potions) {
       const index = this.findIndexFromArray(this.objects, hitObject);
-      console.log('Kollision mitPotion!');
       hitObject.hasPickedUp = true;
       hitObject.objectSprite.destroy();
       this.deleteIndexFromArray(this.objects, index);
       this.globalStateService.modifyProgressbar('potions', 1);
     } else if (hitObject instanceof Coins) {
       const index = this.findIndexFromArray(this.objects, hitObject);
-      console.log('Kollision mit Coin!');
       hitObject.hasPickedUp = true;
       hitObject.objectSprite.destroy();
       this.deleteIndexFromArray(this.objects, index);
       this.globalStateService.modifyProgressbar('coin', 1);
     }
-    console.log(this.objects);
   }
 
-  deleteIndexFromArray(array: any[], index: number) {
+  private deleteIndexFromArray<T>(array: T[], index: number): void {
     array.splice(index, 1);
   }
 
-  findIndexFromArray(array: any[], element: any) {
+  private findIndexFromArray<T>(array: T[], element: T): number {
     return array.findIndex((el) => el === element);
   }
 
@@ -230,7 +213,7 @@ export class Gamescene extends Phaser.Scene {
 
   checkHitboxToggle() {
     if (this.globalStateService.isShowingHitboxes()) {
-      if (!this.debugGraphics) { 
+      if (!this.debugGraphics) {
         this.physics.world.drawDebug = true;
         this.debugGraphics = this.physics.world.createDebugGraphic();
       }
@@ -252,8 +235,8 @@ export class Gamescene extends Phaser.Scene {
     }
   }
 
-  checkCollisions(objects: any) {
-    objects.forEach((obj: any) => {
+  checkCollisions(objects: (Jellyfish | Pufferfish)[]) {
+    objects.forEach((obj) => {
       if (obj instanceof Pufferfish) {
         this.checkPufferfishProximity(obj);
       }
@@ -272,21 +255,21 @@ export class Gamescene extends Phaser.Scene {
       enemy.enemySprite.x,
       enemy.enemySprite.y
     );
-    if (distance < 500) {
+    if (distance < GAME_CONFIG.PUFFERFISH_AGGRO_DISTANCE) {
       enemy.isAggro = true;
       enemy.checkAggroState();
     }
   }
 
   garbageCollection() {
-    this.enemies.forEach((enemy, index) => {
+    this.enemies = this.enemies.filter((enemy) => {
       if (enemy.hasDied) {
-        //console.log('Hier der Index', index);
         enemy.enemySprite.destroy();
-        this.deleteIndexFromArray(this.enemies, index);
+        return false;
       }
+      return true;
     });
-    if (this.boss.hasDied) {
+    if (this.boss.hasDied && this.boss.bossSprite.active) {
       this.boss.bossSprite.destroy();
     }
   }
@@ -297,7 +280,7 @@ export class Gamescene extends Phaser.Scene {
       if (this.physics.overlap(bubble, this.boss.bossSprite)) {
         this.globalStateService.removePBubble(bubble);
         bubble.destroy();
-        this.boss.healthPoints -= 25;
+        this.boss.healthPoints -= GAME_CONFIG.BOSS_DAMAGE_PER_HIT;
         this.boss.isHurted = true;
       }
     });
@@ -310,9 +293,8 @@ export class Gamescene extends Phaser.Scene {
       this.boss.bossSprite.x,
       this.boss.bossSprite.y
     );
-    // 1120 distance for spawn in boss
-    //console.log('Distance to boss: ', distance);
-    if (distance < 1120 && !this.boss.hasSpawned) {
+    // BOSS_SPAWN_DISTANCE (1120) distance for spawn in boss
+    if (distance < GAME_CONFIG.BOSS_SPAWN_DISTANCE && !this.boss.hasSpawned) {
       this.boss.isSpawning = true;
     }
   }

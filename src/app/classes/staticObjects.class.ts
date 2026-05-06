@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { GlobalstateserviceService } from '../services/globalstate.service';
+import { GAME_CONFIG } from '../game.config';
 
 export class StaticObjects {
   scene: Phaser.Scene;
   hasPickedUp: boolean = false;
-  imageCenter: number = 1920 / 2;
+  imageCenter: number = GAME_CONFIG.SCREEN_WIDTH / 2;
   posX!: number;
   posY!: number;
   objectSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -17,14 +18,14 @@ export class StaticObjects {
   }
 
   loadImages(amount: number, key: string, path: string) {
-    for (let i = 1; i < amount; i++) {
+    for (let i = 1; i <= amount; i++) {
       this.scene.load.image(key + i, `${path}${i}.png`);
     }
   }
 
   getSpriteImages(keyString: string, amount: number): { key: string }[] {
     const keyFrames = [];
-    for (let i = 1; i < amount; i++) {
+    for (let i = 1; i <= amount; i++) {
       keyFrames.push({ key: keyString + i });
     }
     return keyFrames;
@@ -44,7 +45,7 @@ export class StaticObjects {
     const randomPositions = pos === 'X' ? this.globalStates.randomizedPostionsX() : this.globalStates.randomizedPostionsY();
     //console.log(`Random Positions${pos}:`, randomPositions);
     while (randomPositions.includes(this.rndNumber)) {
-      this.rndNumber += 155;
+      this.rndNumber += GAME_CONFIG.POSITION_SPACING;
     }
     randomPositions.push(this.rndNumber);
     if (pos === 'X') {
@@ -54,5 +55,4 @@ export class StaticObjects {
     }
     return this.rndNumber;
   }
-
 }

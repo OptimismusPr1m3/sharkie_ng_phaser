@@ -1,3 +1,4 @@
+import { GAME_CONFIG } from '../game.config';
 import { GlobalstateserviceService } from '../services/globalstate.service';
 import { MovableObjects } from './movableObjects.class';
 
@@ -5,7 +6,6 @@ export class Throwable extends MovableObjects {
   bubbleSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   bubbleColorPath: string;
   bubbleName: string;
-  emptyTexture!: any;
 
   constructor(
     scene: Phaser.Scene,
@@ -22,10 +22,10 @@ export class Throwable extends MovableObjects {
     if (this.bubbleColorPath !== undefined) {
       this.scene.load.image(this.bubbleName, this.bubbleColorPath);
     }
-    if (!this.scene.textures.exists("empty")) {
-      const canvas = this.scene.textures.createCanvas("empty", 1, 1);
+    if (!this.scene.textures.exists('empty')) {
+      const canvas = this.scene.textures.createCanvas('empty', 1, 1);
       if (canvas) {
-        canvas.context.fillStyle = "rgba(0,0,0,0)"; // Transparente Farbe
+        canvas.context.fillStyle = 'rgba(0,0,0,0)'; // Transparente Farbe
         canvas.context.fillRect(0, 0, 1, 1);
         canvas.refresh();
       }
@@ -35,77 +35,53 @@ export class Throwable extends MovableObjects {
   spawnThrowable(
     xPosition: number,
     yPosition: number,
-    speedX: number = 300,
-    color: string
+    speedX: number = GAME_CONFIG.BUBBLE_SPEED,
+    color: 'green' | 'white' | 'slap'
   ) {
-    if (color === 'green') {
-      const bubble = this.scene.physics.add.sprite(
-        xPosition,
-        yPosition,
-        this.bubbleName
-      );
-      this.throwGreenBubble(bubble, speedX);
-    } else if (color === 'white') {
-      const bubble = this.scene.physics.add.sprite(
-        xPosition,
-        yPosition,
-        this.bubbleName
-      );
-      this.throwWhiteBubble(bubble, speedX);
-    } else if (color === 'slap') {
-      const slapBox = this.scene.physics.add.sprite(
-        xPosition,
-        yPosition,
-        this.bubbleName
-      );
-      this.throwSlapBox(slapBox, speedX);
+    const sprite = this.scene.physics.add.sprite(xPosition, yPosition, this.bubbleName);
+    if (color === 'slap') {
+      this.throwSlapBox(sprite, speedX);
+    } else {
+      this.throwBubble(sprite, speedX, color);
     }
   }
 
-  throwSlapBox(
-    slapBox: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-    speedX: number) {
-    this.globalStateService.addSlapBox(slapBox);
-    slapBox.setVelocityX(speedX);
-    slapBox.setCollideWorldBounds(true);
-    slapBox.setScale(0.3);
-    slapBox.setAlpha(0.0)
-    this.scene.time.delayedCall(50, () => {
-      slapBox.destroy();
-      this.globalStateService.removeSlapBox(slapBox);
-      console.log('SlapBox destroyed', this.globalStateService.getSlapBoxes());
-    })
-  }
-
-  throwGreenBubble(
+  private throwBubble(
     bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-    speedX: number
+    speedX: number,
+    type: 'green' | 'white'
   ) {
-    this.globalStateService.addPBubble(bubble);
+    if (type === 'green') {
+      this.globalStateService.addPBubble(bubble);
+    } else {
+      this.globalStateService.addWBubble(bubble);
+    }
     bubble.setVelocityX(speedX);
     bubble.setCollideWorldBounds(true);
     bubble.body.onWorldBounds = true;
-    bubble.setScale(0.3);
-    this.scene.time.delayedCall(3000, () => {
+    bubble.setScale(GAME_CONFIG.BUBBLE_SCALE);
+    this.scene.time.delayedCall(GAME_CONFIG.BUBBLE_LIFETIME_MS, () => {
       bubble.destroy();
-      this.globalStateService.removePBubble(bubble);
-      //console.log('Bubble destroyed', this.globalStateService.getPBubbles());
+      if (type === 'green') {
+        this.globalStateService.removePBubble(bubble);
+      } else {
+        this.globalStateService.removeWBubble(bubble);
+      }
     });
   }
 
-  throwWhiteBubble(
-    bubble: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+  private throwSlapBox(
+    slapBox: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
     speedX: number
   ) {
-    this.globalStateService.addWBubble(bubble);
-    bubble.setVelocityX(speedX);
-    bubble.setCollideWorldBounds(true);
-    bubble.body.onWorldBounds = true;
-    bubble.setScale(0.3);
-    this.scene.time.delayedCall(3000, () => {
-      bubble.destroy();
-      this.globalStateService.removeWBubble(bubble);
-      //console.log('Bubble destroyed', this.globalStateService.getWBubbles());
+    this.globalStateService.addSlapBox(slapBox);
+    slapBox.setVelocityX(speedX);
+    slapBox.setCollideWorldBounds(true);
+    slapBox.setScale(GAME_CONFIG.BUBBLE_SCALE);
+    slapBox.setAlpha(0.0);
+    this.scene.time.delayedCall(GAME_CONFIG.SLAP_BOX_LIFETIME_MS, () => {
+      slapBox.destroy();
+      this.globalStateService.removeSlapBox(slapBox);
     });
   }
 }
